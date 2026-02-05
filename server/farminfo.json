@@ -1,0 +1,946 @@
+[
+    {
+        "District": "Mhesana",
+        "Taluka": "Kadi",
+        "Village": "Karannagar",
+        "Surveynumber": 25,
+        "UPIN": 1070101600067,
+        "Oldsurveynumber": 6,
+        "Hectare": 0,
+        "Are": 56,
+        "Square_meters": 87,
+        "Totalassessmentrs": 3.25,
+        "Landusefor": "Agriculture",
+        "Farmname": "Padhrdu",
+        "Khatanum": 67,
+        "Ownership_Details": [
+            {
+                "Farmername": "Sankabhai Ishwarbhai Patel",
+                "Adharnum": 1
+            },
+            {
+                "Farmername": "Shamajibhai Tidabhai Patel",
+                "Adharnum": 3
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Ahmedabad",
+        "Taluka": "Viramgam",
+        "Village": "Limbad",
+        "Surveynumber": 26,
+        "UPIN": 1070101600068,
+        "Oldsurveynumber": 7,
+        "Hectare": 3,
+        "Are": 66,
+        "Square_meters": 98,
+        "Totalassessmentrs": 13.5,
+        "Landusefor": "Agriculture",
+        "Farmname": "Dodkiyu",
+        "Khatanum": 68,
+        "Ownership_Details": [
+            {
+                "Farmername": "Vijaybhai Pravinbhai Patel",
+                "Adharnum": 6
+            },
+            {
+                "Farmername": "Vadilal Pakhabhai Patel",
+                "Adharnum": 7
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Kheda",
+        "Taluka": "Kapadwanj",
+        "Village": "Ambaliyara",
+        "Surveynumber": 27,
+        "UPIN": 1070101600069,
+        "Oldsurveynumber": 8,
+        "Hectare": 5,
+        "Are": 23,
+        "Square_meters": 12,
+        "Totalassessmentrs": 20.66,
+        "Landusefor": "Agriculture",
+        "Farmname": "Ththariyu",
+        "Khatanum": 69,
+        "Ownership_Details": [
+            {
+                "Farmername": "Hirenbhai Pravinbhai Patel",
+                "Adharnum": 8
+            },
+            {
+                "Farmername": "KausikBhai Ratibhai Patel",
+                "Adharnum": 9
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Kheda",
+        "Taluka": "Kapadwanj",
+        "Village": "Garod",
+        "Surveynumber": 28,
+        "UPIN": 1070101600070,
+        "Oldsurveynumber": 2,
+        "Hectare": 1,
+        "Are": 33,
+        "Square_meters": 34,
+        "Totalassessmentrs": 5.89,
+        "Landusefor": "Agriculture",
+        "Farmname": "Khiddiyu",
+        "Khatanum": 70,
+        "Ownership_Details": [
+            {
+                "Farmername": "Dahyabhai Narsinhbhai Patel",
+                "Adharnum": 10
+            },
+            {
+                "Farmername": "Jasubhai Bababhai Patel",
+                "Adharnum": 11
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Gandhinagar",
+        "Taluka": "Dehgam",
+        "Village": "Bardoli",
+        "Surveynumber": 29,
+        "UPIN": 1070101600071,
+        "Oldsurveynumber": 9,
+        "Hectare": 7,
+        "Are": 66,
+        "Square_meters": 56,
+        "Totalassessmentrs": 24.44,
+        "Landusefor": "Agriculture",
+        "Farmname": "Kuvavadu",
+        "Khatanum": 71,
+        "Ownership_Details": [
+            {
+                "Farmername": "Sureshbhai Ratilal Patel",
+                "Adharnum": 12
+            },
+            {
+                "Farmername": "Ravjibhai Nagarbhai Patel",
+                "Adharnum": 13
+            },
+            {
+                "Farmername": "Rasikbhai Dahyabhai Patel",
+                "Adharnum": 14
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Gandhinagar",
+        "Taluka": "Dehgam",
+        "Village": "Kanipur",
+        "Surveynumber": 30,
+        "UPIN": 1070101600072,
+        "Oldsurveynumber": 4,
+        "Hectare": 1,
+        "Are": 98,
+        "Square_meters": 9,
+        "Totalassessmentrs": 6.9,
+        "Landusefor": "Agriculture",
+        "Farmname": "Barmiyu",
+        "Khatanum": 72,
+        "Ownership_Details": [
+            {
+                "Farmername": "Vikram Popatbhai Rathod",
+                "Adharnum": 37
+            },
+            {
+                "Farmername": "Dilubhai Popatbhai Rathod",
+                "Adharnum": 38
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Ahmedabad",
+        "Taluka": "Viramgam",
+        "Village": "Kalyanpur",
+        "Surveynumber": 31,
+        "UPIN": 1070101600073,
+        "Oldsurveynumber": 45,
+        "Hectare": 2,
+        "Are": 47,
+        "Square_meters": 4,
+        "Totalassessmentrs": 9.54,
+        "Landusefor": "Agriculture",
+        "Farmname": "Sasriyu",
+        "Khatanum": 73,
+        "Ownership_Details": [
+            {
+                "Farmername": "Jasubhai Virasangbhai Nayak",
+                "Adharnum": 43
+            },
+            {
+                "Farmername": "Mukeshbhai Jalubhai Nayak",
+                "Adharnum": 44
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "pune",
+        "Taluka": "Gondal",
+        "Village": "Ambardi",
+        "Surveynumber": 32,
+        "UPIN": 1070101600074,
+        "Oldsurveynumber": 34,
+        "Hectare": 3,
+        "Are": 4,
+        "Square_meters": 93,
+        "Totalassessmentrs": 12.9,
+        "Landusefor": "Agriculture",
+        "Farmname": "Padhrdu",
+        "Khatanum": 74,
+        "Ownership_Details": [
+            {
+                "Farmername": "Bhalabhai Chelaji Thakor",
+                "Adharnum": 39
+            },
+            {
+                "Farmername": "Baladevbhai Pratapbhai Thakor",
+                "Adharnum": 40
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "pune",
+        "Taluka": "Dhoraji",
+        "Village": "pipaliya",
+        "Surveynumber": 33,
+        "UPIN": 1070101600075,
+        "Oldsurveynumber": 87,
+        "Hectare": 1,
+        "Are": 36,
+        "Square_meters": 2,
+        "Totalassessmentrs": 5.98,
+        "Landusefor": "Agriculture",
+        "Farmname": "Dodkiyu",
+        "Khatanum": 75,
+        "Ownership_Details": [
+            {
+                "Farmername": "Kamuben Khodubhai Parmar",
+                "Adharnum": 48
+            },
+            {
+                "Farmername": "Laljibhai Khodubhai Parmar",
+                "Adharnum": 49
+            },
+            {
+                "Farmername": "Dalpatkumar Shivubhai Pamar",
+                "Adharnum": 50
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Porbandar",
+        "Taluka": "Ranavav",
+        "Village": "Bordi",
+        "Surveynumber": 34,
+        "UPIN": 1070101600076,
+        "Oldsurveynumber": 56,
+        "Hectare": 0,
+        "Are": 48,
+        "Square_meters": 93,
+        "Totalassessmentrs": 3.12,
+        "Landusefor": "Agriculture",
+        "Farmname": "Ththariyu",
+        "Khatanum": 76,
+        "Ownership_Details": [
+            {
+                "Farmername": "Jayanti Budhabhai Patel",
+                "Adharnum": 17
+            },
+            {
+                "Farmername": "Jayeshbhai Bhailalbhai Patel",
+                "Adharnum": 18
+            },
+            {
+                "Farmername": "Ramjibhai Chhanabhai Patel",
+                "Adharnum": 19
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Porbandar",
+        "Taluka": "Kutiyana",
+        "Village": "Mandva",
+        "Surveynumber": 35,
+        "UPIN": 1070101600077,
+        "Oldsurveynumber": 23,
+        "Hectare": 0,
+        "Are": 1,
+        "Square_meters": 65,
+        "Totalassessmentrs": 2.99,
+        "Landusefor": "Agriculture",
+        "Farmname": "Khiddiyu",
+        "Khatanum": 77,
+        "Ownership_Details": [
+            {
+                "Farmername": "Ganabhai Danubhai Patel",
+                "Adharnum": 20
+            },
+            {
+                "Farmername": "Kantibhai Mohanbhai Patel",
+                "Adharnum": 21
+            },
+            {
+                "Farmername": "Ghansyambhai Mohanbhai Patel",
+                "Adharnum": 22
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Patan",
+        "Taluka": "Radhanpur",
+        "Village": "Shahpur",
+        "Surveynumber": 36,
+        "UPIN": 1070101600078,
+        "Oldsurveynumber": 35,
+        "Hectare": 0,
+        "Are": 69,
+        "Square_meters": 39,
+        "Totalassessmentrs": 3.32,
+        "Landusefor": "Agriculture",
+        "Farmname": "Kuvavadu",
+        "Khatanum": 78,
+        "Ownership_Details": [
+            {
+                "Farmername": "Hasmukhbhai Jivanbhai Patel",
+                "Adharnum": 29
+            },
+            {
+                "Farmername": "Prahladbhai Chaturbhai Patel",
+                "Adharnum": 30
+            },
+            {
+                "Farmername": "Magnabhai Hirabhai Patel",
+                "Adharnum": 31
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Patan",
+        "Taluka": "Radhanpur",
+        "Village": "Dehgam",
+        "Surveynumber": 37,
+        "UPIN": 1070101600079,
+        "Oldsurveynumber": 37,
+        "Hectare": 0,
+        "Are": 70,
+        "Square_meters": 20,
+        "Totalassessmentrs": 3.11,
+        "Landusefor": "Agriculture",
+        "Farmname": "Barmiyu",
+        "Khatanum": 79,
+        "Ownership_Details": [
+            {
+                "Farmername": "Vijaykumar Rambhai Patel",
+                "Adharnum": 32
+            },
+            {
+                "Farmername": "Natubhai Pathabhai Patel",
+                "Adharnum": 34
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Sabar Kantha",
+        "Taluka": "Vadali",
+        "Village": "Mahor",
+        "Surveynumber": 38,
+        "UPIN": 1070101600080,
+        "Oldsurveynumber": 134,
+        "Hectare": 1,
+        "Are": 81,
+        "Square_meters": 7,
+        "Totalassessmentrs": 6.4,
+        "Landusefor": "Agriculture",
+        "Farmname": "Sasriyu",
+        "Khatanum": 80,
+        "Ownership_Details": [
+            {
+                "Farmername": "Natubhai Pathabhai Patel",
+                "Adharnum": 34
+            },
+            {
+                "Farmername": "Rameshbhai Ladhubhai Patel",
+                "Adharnum": 35
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Sabar Kantha",
+        "Taluka": "Idar",
+        "Village": "Golvada",
+        "Surveynumber": 39,
+        "UPIN": 1070101600081,
+        "Oldsurveynumber": 177,
+        "Hectare": 4,
+        "Are": 7,
+        "Square_meters": 30,
+        "Totalassessmentrs": 17.38,
+        "Landusefor": "Agriculture",
+        "Farmname": "Padhrdu",
+        "Khatanum": 81,
+        "Ownership_Details": [
+            {
+                "Farmername": "Vijaybhai Pravinbhai Patel",
+                "Adharnum": 6
+            },
+            {
+                "Farmername": "Vadilal Pakhabhai Patel",
+                "Adharnum": 7
+            },
+            {
+                "Farmername": "Hirenbhai Pravinbhai Patel",
+                "Adharnum": 8
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Surendranagar",
+        "Taluka": "Chotila",
+        "Village": "Hirana",
+        "Surveynumber": 40,
+        "UPIN": 1070101600082,
+        "Oldsurveynumber": 56,
+        "Hectare": 3,
+        "Are": 37,
+        "Square_meters": 45,
+        "Totalassessmentrs": 11.96,
+        "Landusefor": "Agriculture",
+        "Farmname": "Dodkiyu",
+        "Khatanum": 82,
+        "Ownership_Details": [
+            {
+                "Farmername": "Mukeshkumar Baldevbhai Rathod",
+                "Adharnum": 5
+            },
+            {
+                "Farmername": "Rajendra Balvantsinh Rathod",
+                "Adharnum": 36
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Surendranagar",
+        "Taluka": "Limbdi",
+        "Village": "Aanandpar",
+        "Surveynumber": 41,
+        "UPIN": 1070101600083,
+        "Oldsurveynumber": 41,
+        "Hectare": 10,
+        "Are": 85,
+        "Square_meters": 94,
+        "Totalassessmentrs": 41.23,
+        "Landusefor": "Agriculture",
+        "Farmname": "Ththariyu",
+        "Khatanum": 83,
+        "Ownership_Details": [
+            {
+                "Farmername": "Kamuben Khodubhai Parmar",
+                "Adharnum": 48
+            },
+            {
+                "Farmername": "Laljibhai Khodubhai Parmar",
+                "Adharnum": 49
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Ahmedabad",
+        "Taluka": "Mandal",
+        "Village": "varmor",
+        "Surveynumber": 42,
+        "UPIN": 1070101600084,
+        "Oldsurveynumber": 1,
+        "Hectare": 9,
+        "Are": 92,
+        "Square_meters": 39,
+        "Totalassessmentrs": 37.56,
+        "Landusefor": "Agriculture",
+        "Farmname": "Khiddiyu",
+        "Khatanum": 84,
+        "Ownership_Details": [
+            {
+                "Farmername": "Dahyabhai Narsinhbhai Patel",
+                "Adharnum": 10
+            },
+            {
+                "Farmername": "Jasubhai Bababhai Patel",
+                "Adharnum": 11
+            },
+            {
+                "Farmername": "Sureshbhai Ratilal Patel",
+                "Adharnum": 12
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Ahmedabad",
+        "Taluka": "Mandal",
+        "Village": "Ughroj",
+        "Surveynumber": 43,
+        "UPIN": 1070101600085,
+        "Oldsurveynumber": 3,
+        "Hectare": 11,
+        "Are": 8,
+        "Square_meters": 58,
+        "Totalassessmentrs": 45.69,
+        "Landusefor": "Agriculture",
+        "Farmname": "Kuvavadu",
+        "Khatanum": 85,
+        "Ownership_Details": [
+            {
+                "Farmername": "Ravjibhai Nagarbhai Patel",
+                "Adharnum": 13
+            },
+            {
+                "Farmername": "Rasikbhai Dahyabhai Patel",
+                "Adharnum": 14
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Ahmedabad",
+        "Taluka": "Viramgam",
+        "Village": "Bhavda",
+        "Surveynumber": 44,
+        "UPIN": 1070101600086,
+        "Oldsurveynumber": 5,
+        "Hectare": 0,
+        "Are": 57,
+        "Square_meters": 72,
+        "Totalassessmentrs": 3.22,
+        "Landusefor": "Agriculture",
+        "Farmname": "Barmiyu",
+        "Khatanum": 86,
+        "Ownership_Details": [
+            {
+                "Farmername": "Kanjibhai Desaibhai Patel",
+                "Adharnum": 15
+            },
+            {
+                "Farmername": "Shantibhai Mangabhai Patel",
+                "Adharnum": 16
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Mhesana",
+        "Taluka": "Kadi",
+        "Village": "Karannagar",
+        "Surveynumber": 45,
+        "UPIN": 1070101600087,
+        "Oldsurveynumber": 6,
+        "Hectare": 0,
+        "Are": 39,
+        "Square_meters": 4,
+        "Totalassessmentrs": 3.76,
+        "Landusefor": "Agriculture",
+        "Farmname": "Sasriyu",
+        "Khatanum": 87,
+        "Ownership_Details": [
+            {
+                "Farmername": "Mukeshbhai Jalubhai Nayak",
+                "Adharnum": 44
+            },
+            {
+                "Farmername": "Parsotambhai Gafurbhai Nayak",
+                "Adharnum": 45
+            },
+            {
+                "Farmername": "Manubhai Nanubhai Nayak",
+                "Adharnum": 46
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Gandhinagar",
+        "Taluka": "Dehgam",
+        "Village": "Bariya",
+        "Surveynumber": 46,
+        "UPIN": 1070101600088,
+        "Oldsurveynumber": 9,
+        "Hectare": 3,
+        "Are": 73,
+        "Square_meters": 5,
+        "Totalassessmentrs": 12.83,
+        "Landusefor": "Agriculture",
+        "Farmname": "Padhrdu",
+        "Khatanum": 88,
+        "Ownership_Details": [
+            {
+                "Farmername": "Jayanti Budhabhai Patel",
+                "Adharnum": 17
+            },
+            {
+                "Farmername": "Jayeshbhai Bhailalbhai Patel",
+                "Adharnum": 18
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Gandhinagar",
+        "Taluka": "Dehgam",
+        "Village": "Kanipur",
+        "Surveynumber": 47,
+        "UPIN": 1070101600089,
+        "Oldsurveynumber": 10,
+        "Hectare": 3,
+        "Are": 8,
+        "Square_meters": 6,
+        "Totalassessmentrs": 13.44,
+        "Landusefor": "Agriculture",
+        "Farmname": "Dodkiyu",
+        "Khatanum": 89,
+        "Ownership_Details": [
+            {
+                "Farmername": "Sachinkumar Kanubhai Vankar",
+                "Adharnum": 23
+            },
+            {
+                "Farmername": "Chandubhai Valjibhai Vankar",
+                "Adharnum": 24
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "pune",
+        "Taluka": "Dhoraji",
+        "Village": "pipaliya",
+        "Surveynumber": 48,
+        "UPIN": 1070101600090,
+        "Oldsurveynumber": 17,
+        "Hectare": 4,
+        "Are": 75,
+        "Square_meters": 7,
+        "Totalassessmentrs": 18.01,
+        "Landusefor": "Agriculture",
+        "Farmname": "Ththariyu",
+        "Khatanum": 90,
+        "Ownership_Details": [
+            {
+                "Farmername": "Bhalabhai Chelaji Thakor",
+                "Adharnum": 39
+            },
+            {
+                "Farmername": "Baladevbhai Pratapbhai Thakor",
+                "Adharnum": 40
+            },
+            {
+                "Farmername": "Kalidas Chanabhai Thakor",
+                "Adharnum": 41
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "pune",
+        "Taluka": "Gondal",
+        "Village": "Ambardi",
+        "Surveynumber": 49,
+        "UPIN": 1070101600091,
+        "Oldsurveynumber": 99,
+        "Hectare": 1,
+        "Are": 29,
+        "Square_meters": 8,
+        "Totalassessmentrs": 6.24,
+        "Landusefor": "Agriculture",
+        "Farmname": "Khiddiyu",
+        "Khatanum": 91,
+        "Ownership_Details": [
+            {
+                "Farmername": "Vadilal Mafatbhai Patel",
+                "Adharnum": 27
+            },
+            {
+                "Farmername": "Ramanbhai Dhudabhai Patel",
+                "Adharnum": 28
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Porbandar",
+        "Taluka": "Ranavav",
+        "Village": "Bordi",
+        "Surveynumber": 50,
+        "UPIN": 1070101600092,
+        "Oldsurveynumber": 95,
+        "Hectare": 2,
+        "Are": 24,
+        "Square_meters": 92,
+        "Totalassessmentrs": 9.63,
+        "Landusefor": "Agriculture",
+        "Farmname": "Kuvavadu",
+        "Khatanum": 92,
+        "Ownership_Details": [
+            {
+                "Farmername": "Hasmukhbhai Jivanbhai Patel",
+                "Adharnum": 29
+            },
+            {
+                "Farmername": "Prahladbhai Chaturbhai Patel",
+                "Adharnum": 30
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Porbandar",
+        "Taluka": " Kutiyana",
+        "Village": "Mandva",
+        "Surveynumber": 51,
+        "UPIN": 1070101600093,
+        "Oldsurveynumber": 90,
+        "Hectare": 3,
+        "Are": 94,
+        "Square_meters": 64,
+        "Totalassessmentrs": 12.94,
+        "Landusefor": "Agriculture",
+        "Farmname": "Barmiyu",
+        "Khatanum": 93,
+        "Ownership_Details": [
+            {
+                "Farmername": "Ashokbhai Chhanabhai Thakor",
+                "Adharnum": 42
+            },
+            {
+                "Farmername": "Ashokbhai Chhanabhai Thakor",
+                "Adharnum": 2
+            },
+            {
+                "Farmername": "Baladevbhai Pratapbhai Thakor",
+                "Adharnum": 40
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Surendranagar",
+        "Taluka": "Chotila",
+        "Village": "Hirana",
+        "Surveynumber": 52,
+        "UPIN": 1070101600094,
+        "Oldsurveynumber": 38,
+        "Hectare": 4,
+        "Are": 87,
+        "Square_meters": 27,
+        "Totalassessmentrs": 18.4,
+        "Landusefor": "Agriculture",
+        "Farmname": "Sasriyu",
+        "Khatanum": 94,
+        "Ownership_Details": [
+            {
+                "Farmername": "Natubhai Pathabhai Patel",
+                "Adharnum": 34
+            },
+            {
+                "Farmername": "Rameshbhai Ladhubhai Patel",
+                "Adharnum": 35
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Sabar Kantha",
+        "Taluka": "Vadali",
+        "Village": "Golvada",
+        "Surveynumber": 53,
+        "UPIN": 1070101600095,
+        "Oldsurveynumber": 73,
+        "Hectare": 5,
+        "Are": 79,
+        "Square_meters": 59,
+        "Totalassessmentrs": 21.11,
+        "Landusefor": "Agriculture",
+        "Farmname": "Padhrdu",
+        "Khatanum": 95,
+        "Ownership_Details": [
+            {
+                "Farmername": "Hirenbhai Pravinbhai Patel",
+                "Adharnum": 8
+            },
+            {
+                "Farmername": "KausikBhai Ratibhai Patel",
+                "Adharnum": 9
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    },
+    {
+        "District": "Ahmedabad",
+        "Taluka": "Mandal",
+        "Village": "varmor",
+        "Surveynumber": 54,
+        "UPIN": 1070101600096,
+        "Oldsurveynumber": 87,
+        "Hectare": 6,
+        "Are": 44,
+        "Square_meters": 64,
+        "Totalassessmentrs": 23.89,
+        "Landusefor": "Agriculture",
+        "Farmname": "Dodkiyu",
+        "Khatanum": 96,
+        "Ownership_Details": [
+            {
+                "Farmername": "Prachiben Shaileshbhai Patel",
+                "Adharnum": 33
+            },
+            {
+                "Farmername": "Prahladbhai Chaturbhai Patel",
+                "Adharnum": 30
+            },
+            {
+                "Farmername": "Vijaykumar Rambhai Patel",
+                "Adharnum": 32
+            }
+        ],
+        "OtherRightsDetails": [
+            "ધી કરણનગર સેવા સહકારી મંડળીનો બોજો,રુ.૮૦૦૦/-",
+            "ધી બેક ઓફ બરોડા બેકનો બોજજો,રુપિયા.૨૦૦૦/-",
+            "બેંક ઓફ બરોડા,દુઘિયા શાખાનો બોજો રૂપિયા ૭૦૦૦૦/-"
+        ]
+    }
+]
