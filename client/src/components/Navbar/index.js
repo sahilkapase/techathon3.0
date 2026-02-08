@@ -4,6 +4,7 @@ import "./Navbar.css";
 import Logo1 from "../../assets/logo.svg";
 import CardMedia from "@mui/material/CardMedia";
 import { BsBell, BsCircle, BsFillBellFill } from "react-icons/bs";
+import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
 import { AppContext } from "../AuthenticateFarmer/Farmer_account/appContext";
 import Modal from "react-bootstrap/Modal";
 import { Nav, NavDropdown } from "react-bootstrap";
@@ -16,207 +17,262 @@ export default function Navbar() {
   const { socket } = useContext(AppContext);
   const [show, setShow] = useState(false);
   const [notifyCount, setnotifyCount] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // socket.emit("join-notificationroom", {
-  //   to: JSON.parse(auth).Farmerid,
-  // });
-  // socket.off("get-notification").on("get-notification", (data) => {
-  //   const newone = data;
-  //   console.log(newone);
-  //   setNotifidata(data);
-  //   console.warn(notifyCount);
-  //   setnotifyCount(data.length);
-  // });
-
-
-
-
-
-  // const notifications = () => {
-  //   setShow(true);
-  //       socket.emit("join-notificationroom", {
-  //     to: JSON.parse(auth).Farmerid,
-  //   });
-  //   socket.off("get-notification").on("get-notification", (data) => {
-  //     const newone = data;
-  //     console.log(newone);
-  //     setNotifidata(data);
-  //     console.warn(notifyCount);
-  //     setnotifyCount(data.length);
-  //   });
-  // };
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const logout = () => {
     localStorage.clear();
     navigate("/sign-in");
+    setMobileMenuOpen(false);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
     <>
-      <Nav
-        className="navbar fixed-top  navbar-expand-lg navbar-light bg-light"
-        id="nav"
-      >
-        <div className="container-fluid">
-          <Link to="/Farmer_homepage" className="site-title">
-            <CardMedia
-              component="img"
-              height="55"
-              image={Logo1}
-              alt="Career Insights"
-              className="mainlogo1"
-            />
-            <span style={{ color: "#228944" }}>G</span>
-            row <span style={{ color: "#228944" }}>&nbsp;F</span> arm
+      <nav className={`modern-navbar ${scrolled ? "scrolled" : ""}`}>
+        <div className="navbar-container">
+          {/* Logo Section */}
+          <Link to="/Farmer_homepage" className="navbar-brand" onClick={closeMobileMenu}>
+            <div className="logo-wrapper">
+              <CardMedia
+                component="img"
+                height="45"
+                image={Logo1}
+                alt="GrowFarm Logo"
+                className="brand-logo"
+              />
+              <span className="brand-text">
+                <span className="brand-highlight">G</span>row
+                <span className="brand-highlight">&nbsp;F</span>arm
+              </span>
+            </div>
           </Link>
+
+          {/* Mobile Menu Toggle */}
           <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            <span className="navbar-toggler-icon"></span>
+            {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
 
-          {auth2 ?
-
-
-            <>
-              <ul>
-                <CustomLink to="/Genratebill"> Genrate bill</CustomLink>
-                <CustomLink onClick={logout} to="/sign-in" className="logout-btn"> Logout</CustomLink>
+          {/* Navigation Links */}
+          <div className={`nav-menu ${mobileMenuOpen ? "active" : ""}`}>
+            {auth2 ? (
+              // Trader Navigation
+              <ul className="nav-links">
+                <CustomLink to="/Genratebill" onClick={closeMobileMenu}>
+                  <span className="nav-icon">📄</span>
+                  Generate Bill
+                </CustomLink>
+                <li>
+                  <button onClick={logout} className="logout-button">
+                    <span className="nav-icon">🚪</span>
+                    Logout
+                  </button>
+                </li>
               </ul>
-
-            </>
-
-
-            :
-            <>
-              {auth ? (
-                JSON.parse(auth).Username == "admin" ? (
-                  <>
-                    <div>
-                      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <CustomLink to="/Dashboard">Dashboard</CustomLink>
-                        <CustomLink to="/Apmc">APMC</CustomLink>
-                        <CustomLink to="/Yield_analysis">Yield analysis</CustomLink>
-                        <CustomLink to="/Soilanalysis">Soilanalysis</CustomLink>
-                        <CustomLink to="/Irrigationanalysis"> Irrigationanalysis</CustomLink>
-                        <CustomLink to="/findfarmer">Find Farmer</CustomLink>
-                        <CustomLink to="/AdminSchemesMain">Scheme </CustomLink>
-                        {/* <CustomLink to="/AnalysisMap">Analysis Map</CustomLink> */}
-                        <CustomLink onClick={logout} to="/sign-in" className="logout-btn">
+            ) : (
+              <>
+                {auth ? (
+                  JSON.parse(auth).Username === "admin" ? (
+                    // Admin Navigation
+                    <ul className="nav-links">
+                      <CustomLink to="/Dashboard" onClick={closeMobileMenu}>
+                        <span className="nav-icon">📊</span>
+                        Dashboard
+                      </CustomLink>
+                      <CustomLink to="/Apmc" onClick={closeMobileMenu}>
+                        <span className="nav-icon">🏪</span>
+                        APMC
+                      </CustomLink>
+                      <CustomLink to="/Yield_analysis" onClick={closeMobileMenu}>
+                        <span className="nav-icon">📈</span>
+                        Yield Analysis
+                      </CustomLink>
+                      <CustomLink to="/Soilanalysis" onClick={closeMobileMenu}>
+                        <span className="nav-icon">🌱</span>
+                        Soil Analysis
+                      </CustomLink>
+                      <CustomLink to="/Irrigationanalysis" onClick={closeMobileMenu}>
+                        <span className="nav-icon">💧</span>
+                        Irrigation Analysis
+                      </CustomLink>
+                      <CustomLink to="/findfarmer" onClick={closeMobileMenu}>
+                        <span className="nav-icon">👨‍🌾</span>
+                        Find Farmer
+                      </CustomLink>
+                      <CustomLink to="/AdminSchemesMain" onClick={closeMobileMenu}>
+                        <span className="nav-icon">📋</span>
+                        Schemes
+                      </CustomLink>
+                      <li>
+                        <button onClick={logout} className="logout-button">
+                          <span className="nav-icon">🚪</span>
                           Logout
-                        </CustomLink>
-                      </ul>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <CustomLink to="/Myaccount">My Account</CustomLink>
-                        <CustomLink to="/ExpertTalk">Expert Talk</CustomLink>
-                        <CustomLink to="/chatbot">AI Assistant</CustomLink>
-                        <CustomLink to="/Weatherdetails">
-                          Weather Details
-                        </CustomLink>
-                        <CustomLink to="/SchemesMain">Schemes</CustomLink>
-                        <NavDropdown title="Smart Farming" id="basic-nav-dropdown">
+                        </button>
+                      </li>
+                    </ul>
+                  ) : (
+                    // Farmer Navigation
+                    <ul className="nav-links">
+                      <CustomLink to="/Myaccount" onClick={closeMobileMenu}>
+                        <span className="nav-icon">👤</span>
+                        My Account
+                      </CustomLink>
+                      <CustomLink to="/ExpertTalk" onClick={closeMobileMenu}>
+                        <span className="nav-icon">💬</span>
+                        Expert Talk
+                      </CustomLink>
+                      <CustomLink to="/chatbot" onClick={closeMobileMenu}>
+                        <span className="nav-icon">🤖</span>
+                        AI Assistant
+                      </CustomLink>
+                      <CustomLink to="/Weatherdetails" onClick={closeMobileMenu}>
+                        <span className="nav-icon">🌤️</span>
+                        Weather
+                      </CustomLink>
+                      <CustomLink to="/SchemesMain" onClick={closeMobileMenu}>
+                        <span className="nav-icon">📋</span>
+                        Schemes
+                      </CustomLink>
+                      <li className="dropdown-wrapper">
+                        <NavDropdown
+                          title={
+                            <span className="dropdown-title">
+                              <span className="nav-icon">🌾</span>
+                              Smart Farming
+                              <FiChevronDown className="dropdown-arrow" />
+                            </span>
+                          }
+                          id="smart-farming-dropdown"
+                          className="modern-dropdown"
+                        >
                           <NavDropdown.Item>
-                            {" "}
-                            <CustomLink to="/Croprek">
-                              Crop Recomendation{" "}
+                            <CustomLink to="/Croprek" onClick={closeMobileMenu}>
+                              <span className="dropdown-icon">🌿</span>
+                              Crop Recommendation
                             </CustomLink>
                           </NavDropdown.Item>
                           <NavDropdown.Item>
-                            <CustomLink to="/Diseasepre">
+                            <CustomLink to="/Diseasepre" onClick={closeMobileMenu}>
+                              <span className="dropdown-icon">🔬</span>
                               Disease Prediction
                             </CustomLink>
                           </NavDropdown.Item>
                           <NavDropdown.Item>
-                            {" "}
-                            <CustomLink to="/yieldfinder">Yield Finder</CustomLink>
+                            <CustomLink to="/yieldfinder" onClick={closeMobileMenu}>
+                              <span className="dropdown-icon">📊</span>
+                              Yield Finder
+                            </CustomLink>
                           </NavDropdown.Item>
                         </NavDropdown>
-                        {/* <li class="notifiicon" onClick={notifications}>
-                      <div className="NotifyCircle">
-                        {" "}
-                        <span className="notifyCount">{notifyCount}</span>{" "}
-                      </div>
-                      <BsBell style={{ height: "1.5em", width: "1.5em" }} />
-                    </li> */}
-                        <CustomLink onClick={logout} to="/sign-in" className="logout-btn">
+                      </li>
+                      <li>
+                        <button onClick={logout} className="logout-button">
+                          <span className="nav-icon">🚪</span>
                           Logout
-                        </CustomLink>
-                      </ul>
-                    </div>
-                  </>
-                )
-              ) : (
-                <>
-                  <ul>
-                    <CustomLink to="/sign-up">Farmer Registration</CustomLink>
-                    <CustomLink to="/Expertregistration"> Expertregistration</CustomLink>
-                    <CustomLink to="/sign-in">Farmer Login</CustomLink>
-                    <CustomLink to="/adminlogin">Admin Login</CustomLink>
-                    <CustomLink to="/traderlogin">Trader Login</CustomLink>
+                        </button>
+                      </li>
+                    </ul>
+                  )
+                ) : (
+                  // Guest Navigation
+                  <ul className="nav-links guest-links">
+                    <CustomLink to="/sign-up" onClick={closeMobileMenu}>
+                      <span className="nav-icon">✍️</span>
+                      Farmer Registration
+                    </CustomLink>
+                    <CustomLink to="/Expertregistration" onClick={closeMobileMenu}>
+                      <span className="nav-icon">🎓</span>
+                      Expert Registration
+                    </CustomLink>
+                    <CustomLink to="/sign-in" onClick={closeMobileMenu}>
+                      <span className="nav-icon">👨‍🌾</span>
+                      Farmer Login
+                    </CustomLink>
+                    <CustomLink to="/adminlogin" onClick={closeMobileMenu}>
+                      <span className="nav-icon">🛡️</span>
+                      Admin Login
+                    </CustomLink>
+                    <CustomLink to="/traderlogin" onClick={closeMobileMenu}>
+                      <span className="nav-icon">💼</span>
+                      Trader Login
+                    </CustomLink>
                   </ul>
-                </>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* Notification Modal */}
+      {show && (
+        <Modal
+          animation={false}
+          show={show}
+          onHide={() => setShow(false)}
+          className="modern-notification-modal"
+          centered
+        >
+          <Modal.Header closeButton className="modal-header-custom">
+            <Modal.Title>
+              <BsFillBellFill className="modal-bell-icon" />
+              Notifications
+              {notifyCount > 0 && (
+                <span className="notification-badge">{notifyCount}</span>
               )}
-            </>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="modal-body-custom">
+            {notifidata.length > 0 ? (
+              notifidata.map((dataa, idx) => (
+                <div key={idx} className="notification-item">
+                  <div className="notification-number">{idx + 1}</div>
+                  <div className="notification-content">{dataa.content}</div>
+                </div>
+              ))
+            ) : (
+              <div className="no-notifications">
+                <BsBell size={48} className="empty-bell-icon" />
+                <p>No notifications yet</p>
+              </div>
+            )}
+          </Modal.Body>
+        </Modal>
+      )}
 
-          }
-
-
-        </div>
-      </Nav>
-
-      {show ? (
-        <div>
-          <Modal
-            animation={false}
-            show={show}
-            onHide={() => setShow(false)}
-            id="notifiModel"
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Notifications</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {notifidata.map((dataa, idx) => {
-                return (
-                  <>
-                    <h4>
-                      {idx + 1}
-                      {dataa.content}
-                    </h4>
-                  </>
-                );
-              })}
-            </Modal.Body>
-            <Modal.Footer></Modal.Footer>
-          </Modal>
-        </div>
-      ) : null}
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-overlay" onClick={closeMobileMenu}></div>
+      )}
     </>
   );
 }
 
-function CustomLink({ to, children, ...props }) {
+function CustomLink({ to, children, onClick, ...props }) {
   const resolvedPath = useResolvedPath(to);
   const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 
   return (
-    <>
-      <li className={isActive ? "active" : ""}>
-        <Link to={to} {...props}>
-          {children}
-        </Link>
-      </li>
-    </>
+    <li className={`nav-item ${isActive ? "active" : ""}`}>
+      <Link to={to} onClick={onClick} {...props}>
+        {children}
+      </Link>
+    </li>
   );
 }
