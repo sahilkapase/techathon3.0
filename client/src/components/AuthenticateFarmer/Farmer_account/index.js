@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import style from "./style.css";
+import "./style.css";
 import profileimg from "./profile.png";
 import Modal from "react-bootstrap/Modal";
 import Moment from "moment";
@@ -11,14 +11,13 @@ import Tooltip from "react-bootstrap/Tooltip";
 import Button from "react-bootstrap/Button";
 import { BsCheckCircleFill, BsInfoCircleFill } from "react-icons/bs";
 import { AiOutlineCopy } from "react-icons/ai";
+import { FiEdit2, FiDownload, FiTrendingUp } from "react-icons/fi";
+import { MdAgriculture, MdGrass, MdAttachMoney } from "react-icons/md";
 import copy from "copy-to-clipboard";
 import jsPDF from "jspdf";
 import { AppContext } from "./appContext";
 import { Form, Card, ProgressBar, Table } from "react-bootstrap";
 import { Container, Col, Row, FormGroup, Label, Input } from "reactstrap";
-import { Grid } from "react-bootstrap-icons";
-import { Hidden } from "@mui/material";
-import { borderBottom } from "@mui/system";
 import Select from "react-select";
 
 const options = [
@@ -32,7 +31,6 @@ const options = [
 function Myaccount() {
   const [farmdata, setFarmdata] = useState([]);
   const [farmdrop, setFarmdrop] = useState([]);
-  // const [Crop, setCrop] = useState("");
   const [Soil_type, setSoil_type] = useState("");
   const [Season, setSeason] = useState("");
   const [Sow_date, setSow_date] = useState("");
@@ -43,75 +41,25 @@ function Myaccount() {
   const [Name, setName] = useState("");
   const [UPINinfo, setUPINinfo] = useState("");
   const [Irigation_sources_used, setIrigation_sources_used] = useState("");
-  const auth = localStorage.getItem("user");
-  const { socket } = useContext(AppContext);
   const [Yielddata, setYielddata] = useState([]);
   const [Crop, setCrop] = useState([]);
   const [Cropproduction, setCropproduction] = useState([]);
   const [Ratio, setRatio] = useState([]);
-  const [values, setValues] = useState([]);
-  const [show, setShow] = useState(false);
-  
   const [Pro, setPro] = useState([]);
-  const [valuespro, setValuespro] = useState([]);
+  const [show, setShow] = useState(false);
   const [Billhistorydata, setBillhistorydata] = useState([]);
+  
+  const auth = localStorage.getItem("user");
+  const { socket } = useContext(AppContext);
 
-
- 
-  console.log(Farmerid)
   const handleChangecrop = (selectedOption) => {
     setCrop(selectedOption);
     setCropproduction(selectedOption);
   };
 
-  // const handleChangeRatio = (event) => {
-  //   const options = event.target.options;
-  //   const selectedSkills = [];
-  //   for (let i = 0; i < options.length; i++) {
-  //     if (options[i].selected) {
-  //       selectedSkills.push(options[i].value);
-  //     }
-  //   }
-
-  //   console.log(selectedSkills)
-  // };
-
-  const handleChangeRatio = (event, index) => {
-    const updatedValues = [...values];
-    updatedValues[index] = event.target.value;
-    setValues(updatedValues);
-    setRatio(updatedValues);
-  };
-
-  const  handleChangeProduction = (event, index) => {
-    const updatedValuespro = [...valuespro];
-    updatedValuespro[index] = event.target.value;
-    setValuespro(updatedValuespro);
-    setPro(updatedValuespro);
-  };
-
-  console.log(Ratio);
-
-  console.log(Crop);
-
-console.warn(UPIN)
-
-  // socket.emit("join-room", {
-  //   Farmerid: JSON.parse(auth).Farmerid,
-  // });
-
-  // useEffect(() => {
-  //   socket.emit("join-notificationroom", {
-  //     to: JSON.parse(auth).Farmerid,
-  //   });
-  // }, [socket]);
-
-
-
-
   useEffect(() => {
     getschemedata();
-    getApmcbilldata()
+    getApmcbilldata();
   }, []);
 
   function getschemedata() {
@@ -122,64 +70,55 @@ console.warn(UPIN)
       .then((response) => response.json())
       .then((data) => {
         setFarmdata(data);
-        console.log(data);
         setFarmdrop(data);
       });
   }
+
   function getApmcbilldata() {
-    console.warn(JSON.parse(auth).Farmerid)
     fetch(`http://localhost:8000/farmer/bills_farmers/${JSON.parse(auth).Farmerid}`, {
       method: "GET",
       crossDomain: true,
     })
       .then((response) => response.json())
       .then((data) => {
-        console.warn(data);
-        setBillhistorydata(data)
+        setBillhistorydata(data);
       });
   }
 
-
   function getYielddata() {
-    // const upininfoname = event.target.value;
-    // console.warn(upininfoname)
-    console.log(UPINinfo)
     fetch(`http://localhost:8000/cropdata/crophistory/${UPINinfo}`, {
       method: "GET",
       crossDomain: true,
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
-        setYielddata(data)
-data.map((newdata => {
-  console.log(newdata)
-}))
-
-
-
+        setYielddata(data);
       });
   }
-  // console.log(Yielddata);
 
-  function AddnewCrop(){
-    setFarmerid(JSON.parse(auth).Farmerid)
-    setName(JSON.parse(auth).Name)
-    setShow(true)
+  function AddnewCrop() {
+    setFarmerid(JSON.parse(auth).Farmerid);
+    setName(JSON.parse(auth).Name);
+    setShow(true);
   }
 
-  console.log(Farmerid)
-  console.log(Name)
+  const handleChangeRatio = (event, index) => {
+    const values = [...Ratio];
+    values[index] = event.target.value;
+    setRatio(values);
+  };
 
-  const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      Simple tooltip
-    </Tooltip>
-  );
+  const handleChangeProduction = (event, index) => {
+    const values = [...Pro];
+    values[index] = event.target.value;
+    setPro(values);
+  };
+
   const copyToClipboard = () => {
     copy(JSON.parse(auth).Farmerid);
-    alert(`You have copied "${JSON.parse(auth).Farmerid}"`);
+    alert(`Copied: "${JSON.parse(auth).Farmerid}"`);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -206,691 +145,466 @@ data.map((newdata => {
         }
       );
       const data = await response.json();
-      console.log(data.data);
-
-      console.log(Farmerid)
-      console.log(Name)
+      setShow(false);
+      getYielddata();
     } catch (error) {
       console.error(error);
     }
   };
 
   return auth ? (
-    <>
-      <div className="auth-wrapper_AccountmainP">
-        <div className="auth-inner_AccountmainP">
-          <div>
-            <img
-              className="rounded-full"
-              id="Profileimage"
-              src="/Profileimage.svg"
-              alt="..."
-            ></img>
-            <OverlayTrigger
-              placement="right"
-              overlay={
-                <Tooltip id="button-tooltip-2"> Farmer Full Name </Tooltip>
-              }
-            >
-              {({ ref, ...triggerHandler }) => (
-                <>
-                  <h6 className="MainP">
-                    {JSON.parse(auth).Name} &nbsp;
-                    <div
-                      ref={ref}
-                      variant="light"
-                      {...triggerHandler}
-                      className="d-inline-flex align-items-center"
-                    >
-                      <BsInfoCircleFill
-                        style={{ height: "0.6em", width: "0.6em" }}
-                      />
-                    </div>{" "}
-                  </h6>
-                </>
-              )}
-            </OverlayTrigger>
-            <OverlayTrigger
-              placement="right"
-              overlay={
-                <Tooltip id="button-tooltip-2"> Farmers Uniqe id </Tooltip>
-              }
-            >
-              {({ ref, ...triggerHandler }) => (
-                <>
-                  <h6
-                    className="MainP"
-                    id="farmerID"
-                    style={{ color: "#44A444", fontSize: "15px" }}
-                  >
-                    {JSON.parse(auth).Farmerid} &nbsp;
-                    <div
-                      ref={ref}
-                      variant="light"
-                      {...triggerHandler}
-                      className="d-inline-flex align-items-center"
-                    >
-                      <BsInfoCircleFill
-                        style={{ height: "0.6em", width: "0.6em" }}
-                      />
-                    </div>{" "}
-                    <AiOutlineCopy
-                      style={{ height: "1.4em", width: "1.4em" }}
-                      onClick={copyToClipboard}
-                    ></AiOutlineCopy>
-                  </h6>
-                  <table id="F_Account_Pinfo">
-                    <tr>
-                      <th>Farmertype</th>
-                      <td>{JSON.parse(auth).Farmertype}</td>
-                    </tr>
-                    <tr>
-                      <th>Category</th>
-                      <td>{JSON.parse(auth).Category}</td>
-                    </tr>
-                    <tr>
-                      <th>Gender</th>
-                      <td>{JSON.parse(auth).Gender}</td>
-                    </tr>
-                    <tr>
-                      <th>Date of birth</th>
-                      <td>
-                        {Moment(JSON.parse(auth).Dateofbirth).format(
-                          "DD-MM-YYYY"
-                        )}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Qualification</th>
-                      <td>{JSON.parse(auth).Qualification}</td>
-                    </tr>
-                    <tr>
-                      <th>Physical Disability</th>
-                      <td>{JSON.parse(auth).Physical_handicap}</td>
-                    </tr>
-                    <tr>
-                      <th>Ration card Category </th>
-                      <td>{JSON.parse(auth).Rationcardcategory}</td>
-                    </tr>
-                  </table>
-                  {/* <button onClick={generatePDF} type="primary">Download PDF</button>  */}
-                </>
-              )}
-            </OverlayTrigger>
+    <div className="myaccount-wrapper">
+      {/* ============ PREMIUM HEADER SECTION ============ */}
+      <div className="premium-header">
+        <div className="header-backdrop"></div>
+        
+        <div className="profile-card-premium">
+          <div className="profile-visual">
+            <div className="avatar-circle">
+              <img
+                src="/Profileimage.svg"
+                alt="Profile"
+                className="avatar-img"
+              />
+              <div className="status-indicator online"></div>
+            </div>
+          </div>
+
+          <div className="profile-content-premium">
+            <h1 className="farmer-name-premium">{JSON.parse(auth).Name}</h1>
+            <p className="farmer-title">Registered Farmer</p>
+
+            <div className="id-section">
+              <span className="id-label">Farmer ID:</span>
+              <span className="id-value">{JSON.parse(auth).Farmerid}</span>
+              <button className="copy-btn-premium" onClick={copyToClipboard}>
+                <AiOutlineCopy size={16} />
+              </button>
+            </div>
+
+            <div className="stats-grid-premium">
+              <div className="stat-card">
+                <MdAgriculture className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-label">Farms</span>
+                  <span className="stat-value">{farmdata.length}</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <MdGrass className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-label">Crops</span>
+                  <span className="stat-value">{Yielddata.length}</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <MdAttachMoney className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-label">Bills</span>
+                  <span className="stat-value">{Billhistorydata.length}</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <FiTrendingUp className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-label">Category</span>
+                  <span className="stat-value">{JSON.parse(auth).Category}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="Main_Farmer_Account">
-        <div className="Mainin_Farmer_Account">
-          <Tabs
-            defaultActiveKey="profile"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-            style={{
-              marginTop: "-40px",
-              marginLeft: "-55px",
-              position: "fixed",
-              backgroundColor: "#27963C",
-              width: "1000px",
-              height: "51px",
-              paddingLeft: "56px",
-              paddingTop: "10px",
-              borderRadius: "5px",
-              borderTopRightRadius: "0px",
-              borderBottomRightRadius: "0px",
-            }}
+      {/* ============ MAIN CONTENT SECTION ============ */}
+      <div className="tabs-section-premium">
+        <Tabs
+          defaultActiveKey="profile"
+          id="myaccount-tabs"
+          className="nav-tabs-premium"
+        >
+          {/* ============ TAB 1: COMMUNICATION DETAILS ============ */}
+          <Tab
+            eventKey="profile"
+            title={<span className="tab-title-premium">📋 Personal Info</span>}
           >
-            <Tab eventKey="profile" title="Communication Details" id="intabs">
-              <br />
-              <Card id="F_A_Minfo">
-                <Card.Body>
-                  <div>
-                    <Image src="/Leaf.svg" id="Leaf1info" />
-                    <Image src="/Leaf1.svg" id="Leaf1info1" />
-                    <h4 className="CD_title">Communication details</h4>
-                    <hr />
-                    <div className="commcont">
-                      <p>
-                        <span className="CD_Name_Title">Email : </span>{" "}
-                        {JSON.parse(auth).Email}
-                        <span style={{ marginLeft: "30px" }}>
-                          Verified
-                          <BsCheckCircleFill id="iconCheck" />
-                        </span>
-                      </p>
-                      <p>
-                        <span className="CD_Name_Title">Mobile Number : </span>{" "}
-                        {JSON.parse(auth).Mobilenum}
-                        <span style={{ marginLeft: "110px" }}>
-                          Verified
-                          <BsCheckCircleFill id="iconCheck" />
-                        </span>
-                      </p>
-                      <p>
-                        <span className="CD_Name_Title">Pincode : </span>
-                        {JSON.parse(auth).Pincode}
-                      </p>
-                      <p>
-                        <span className="CD_Name_Title">Address : </span>{" "}
-                        {JSON.parse(auth).Village} ,{JSON.parse(auth).Taluka} ,{" "}
-                        {JSON.parse(auth).State}
-                      </p>
+            <div className="tab-content-premium">
+              <div className="card-grid-2col">
+                <div className="info-card">
+                  <h3 className="card-title">Communication Details</h3>
+                  <div className="info-item">
+                    <span className="info-label">Email</span>
+                    <div className="info-value-group">
+                      <span className="info-value">{JSON.parse(auth).Email}</span>
+                      <span className="verified-badge">
+                        <BsCheckCircleFill /> Verified
+                      </span>
                     </div>
                   </div>
-                  <div>
-                    <br />
-                    <h4 className="CD_title">Bank details</h4>
-                    <hr />
-                    <div className="commcont">
-                      <p>
-                        <span className="CD_Name_Title">Bank name : </span>{" "}
-                        {JSON.parse(auth).Bankname}{" "}
-                      </p>
-                      <p>
-                        <span className="CD_Name_Title">IFSC Code : </span>
-                        {JSON.parse(auth).IFSC}
-                      </p>
-                      <p>
-                        <span className="CD_Name_Title">Account Number : </span>{" "}
-                        {JSON.parse(auth).Accountnum}
-                      </p>
-                    </div>
+                  <div className="info-item">
+                    <span className="info-label">Mobile Number</span>
+                    <span className="info-value">+91 {JSON.parse(auth).Mobilenum}</span>
                   </div>
-                </Card.Body>
-              </Card>
-            </Tab>
-            <Tab eventKey="home" title="Farm Information">
-              <br />
-              <div>
-                {farmdata.map((farm, idx) => {
-                  return (
-                    <>
-                      <h5 className="FarmTitle">
-                        Farm : {idx + 1} ({farm.Farmname})
-                      </h5>
-                      <Card id="F_A_Minfo">
-                        <Card.Body>
-                          <div>
-                            <h4 className="CD_title">Farm Location</h4>
-                            <hr />
-                            <div className="commcont">
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">State : </span>{" "}
-                                Gujarat{" "}
-                              </p>
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">
-                                  {" "}
-                                  District :{" "}
-                                </span>
-                                {farm.District}{" "}
-                              </p>
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">Taluka : </span>
-                                {farm.Taluka}
-                              </p>
-                              <p>
-                                <span className="CD_Name_Title">
-                                  {" "}
-                                  Village :
-                                </span>{" "}
-                                {farm.Village}{" "}
-                              </p>
-                            </div>
-                          </div>
-                          <div>
-                            <br />
-                            <h4 className="CD_title">Land information</h4>
-                            <hr />
-                            <div className="commcont">
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">UPIN : </span>{" "}
-                                {farm.UPIN}
-                              </p>
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">
-                                  {" "}
-                                  Surveynumber :{" "}
-                                </span>
-                                {farm.Surveynumber}{" "}
-                              </p>
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">
-                                  Old survey number :{" "}
-                                </span>
-                                {farm.Oldsurveynumber}
-                              </p>
-                              <p>
-                                <span className="CD_Name_Title">
-                                  Khata No :{" "}
-                                </span>
-                                {farm.Khatanum}{" "}
-                              </p>
-                            </div>
-                          </div>
-                          <div>
-                            <br />
-                            <h4 className="CD_title">Land Area</h4>
-                            <hr />
-                            <div className="commcont">
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">
-                                  {" "}
-                                  Total Area (H.Are.SqMt) :{" "}
-                                </span>{" "}
-                                {farm.Hectare}.{farm.Are}.{farm.Square_meters}
-                              </p>
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">
-                                  {" "}
-                                  Landusefor :
-                                </span>{" "}
-                                {farm.Landusefor}
-                              </p>
-                              <p className="P_alltags">
-                                <span className="CD_Name_Title">
-                                  Totalassessmentrs :{" "}
-                                </span>{" "}
-                                {farm.Totalassessmentrs} Rs.
-                              </p>
-                            </div>
-                          </div>
+                  <div className="info-item">
+                    <span className="info-label">Address</span>
+                    <span className="info-value">{JSON.parse(auth).Address || "Not provided"}</span>
+                  </div>
+                </div>
 
-                          <div>
-                            <br />
-                            <br />
-                            <br />
-                            <h4 className="CD_title">Farm Ownership Details</h4>
-                            <hr />
-                            <div className="commcont">
-                              {farm.Ownership_Details.map(
-                                (farmnewArray, idx) => {
-                                  return (
-                                    <>
-                                      <p>
-                                        <span className="CD_Name_Title">
-                                          {" "}
-                                          {idx + 1}.{" "}
-                                        </span>{" "}
-                                        {farmnewArray.Farmername}
-                                      </p>
-                                      <h6 style={{ fontWeight: 100 }}></h6>
-                                    </>
-                                  );
-                                }
-                              )}
+                <div className="info-card">
+                  <h3 className="card-title">Personal Details</h3>
+                  <div className="info-item">
+                    <span className="info-label">Category</span>
+                    <span className="badge-category">{JSON.parse(auth).Category}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Farmer Type</span>
+                    <span className="badge-type">{JSON.parse(auth).Farmertype}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Gender</span>
+                    <span className="info-value">{JSON.parse(auth).Gender}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Date of Birth</span>
+                    <span className="info-value">
+                      {Moment(JSON.parse(auth).Dateofbirth).format("DD-MM-YYYY")}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="info-card">
+                  <h3 className="card-title">Banking Details</h3>
+                  <div className="info-item">
+                    <span className="info-label">Bank Name</span>
+                    <span className="info-value">{JSON.parse(auth).Bankname || "-"}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">IFSC Code</span>
+                    <span className="info-value">{JSON.parse(auth).IFSC || "-"}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Account Number</span>
+                    <span className="info-value">****{String(JSON.parse(auth).Accountnum).slice(-4)}</span>
+                  </div>
+                </div>
+
+                <div className="info-card">
+                  <h3 className="card-title">Government IDs</h3>
+                  <div className="info-item">
+                    <span className="info-label">Aadhaar</span>
+                    <span className="info-value">****{String(JSON.parse(auth).Adharnum).slice(-4)}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Ration Card</span>
+                    <span className="info-value">{JSON.parse(auth).Rationcardcategory || "Not provided"}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Qualification</span>
+                    <span className="info-value">{JSON.parse(auth).Qualification || "-"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Tab>
+
+          {/* ============ TAB 2: FARM INFORMATION ============ */}
+          <Tab
+            eventKey="home"
+            title={<span className="tab-title-premium">🌾 Farm Details</span>}
+          >
+            <div className="tab-content-premium">
+              {farmdata.length > 0 ? (
+                <div className="farms-grid">
+                  {farmdata.map((farm, idx) => (
+                    <div key={idx} className="farm-card-premium">
+                      <div className="farm-header">
+                        <h3>Farm {idx + 1}</h3>
+                        <span className="farm-name">{farm.Farmname}</span>
+                      </div>
+
+                      <div className="farm-sections">
+                        <div className="farm-section">
+                          <h4>📍 Location</h4>
+                          <div className="farm-info-grid">
+                            <div className="info-item-small">
+                              <span className="label">District</span>
+                              <span className="value">{farm.District}</span>
                             </div>
-                          </div>
-                          <div>
-                            <br />
-                            <h4 className="CD_title">Farm Ownership Details</h4>
-                            <hr />
-                            <div className="commcont">
-                              {farm.OtherRightsDetails.map(
-                                (farmnewArray, idx) => {
-                                  return (
-                                    <>
-                                      <p>
-                                        <span className="CD_Name_Title">
-                                          {" "}
-                                          {idx + 1}.{" "}
-                                        </span>{" "}
-                                        {farmnewArray}
-                                      </p>
-                                      <h6 style={{ fontWeight: 100 }}></h6>
-                                    </>
-                                  );
-                                }
-                              )}
+                            <div className="info-item-small">
+                              <span className="label">Taluka</span>
+                              <span className="value">{farm.Taluka}</span>
                             </div>
-                          </div>
-                        </Card.Body>
-                      </Card>
-                      {/* <Col key={idx}>
-                        
-                        <div className="parentbox">
-                          <div className="section1">
-                            <div className="box1">
-                              <h5>Farm Location</h5>
-                              <h6 style={{ fontWeight: 100 }}>
-                                State : Gujarat
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                District : {farm.District}
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Taluka : {farm.Taluka}
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Village : {farm.Village}
-                              </h6>
+                            <div className="info-item-small">
+                              <span className="label">Village</span>
+                              <span className="value">{farm.Village}</span>
                             </div>
-                            <div className="box2">
-                              <h5>Land information</h5>
-                              <h6 style={{ fontWeight: 100 }}>
-                                UPIN : {farm.UPIN}
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                              Surveynumber : {farm.Surveynumber}
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Old survey number : {farm.Oldsurveynumber}
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Khata No : {farm.Khatanum}
-                              </h6>
-                            </div>
-                            <div className="box3">
-                              <h5>Land Area</h5>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Total Area (H.Are.SqMt) : {farm.Hectare}.
-                                {farm.Are}.{farm.Square_meters}
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Landusefor : {farm.Landusefor}
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Totalassessmentrs : {farm.Totalassessmentrs} Rs.
-                              </h6>
-                              <h6 style={{ fontWeight: 100 }}>
-                                Farmname : {farm.Farmname}
-                              </h6>
-                            </div>
-                          </div>
-                          <div className="section2">
-                            <div className="box4">
-                              <h5>Farm Ownership Details</h5>
-                              {farm.Ownership_Details.map(
-                                (farmnewArray, idx) => {
-                                  return (
-                                    <>
-                                      <h6 style={{ fontWeight: 100 }}>
-                                        {farmnewArray.Farmername}
-                                      </h6>
-                                    </>
-                                  );
-                                }
-                              )}
-                            </div>
-                            <div className="box5">
-                              <h5>Farm OtherRights Details</h5>
-                              {farm.OtherRightsDetails.map(
-                                (farmnewArray, idx) => {
-                                  return (
-                                    <>
-                                      <h6>{farmnewArray}</h6>
-                                    </>
-                                  );
-                                }
-                              )}
+                            <div className="info-item-small">
+                              <span className="label">Pincode</span>
+                              <span className="value">{farm.Pincode || "-"}</span>
                             </div>
                           </div>
                         </div>
 
-                        <br></br>
-                      </Col> */}
-                    </>
-                  );
-                })}
-              </div>
-            </Tab>
-            <Tab eventKey="Yieldinfo" title="Yield information">
-              <br />
-
-              <div>
-                <div>
-                  <select
-                    onChange={(event) => setUPINinfo(event.target.value)}
-                    
-                    name="UPIN"
-                  >
-                    <option selected>Select Farm</option>
-                    {farmdrop.map((farmdropnew) => {
-                      return (
-                        <>
-                          <option value={farmdropnew.UPIN}>
-                            {farmdropnew.Farmname}
-                          </option>
-                        </>
-                      );
-                    })}
-                  </select>
-                </div>
-                  <button type="submit" className="btn btn-primary" onClick={getYielddata}>
-                    Submit
-                  </button>
-<br />
-<Table striped bordered hover className="TableAllskims">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Crop</th>
-              <th>Production</th>
-              <th>Production</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Yielddata.map((newdata, idx) => {
-              return (
-                <>
-                {newdata.Crop.map((newdataa , idx) =>{
-                  return(
-                    <>
-                    <tr>
-                    <td>{idx + 1}</td>
-                    <td>{newdataa.value}</td>
-                    <td>{newdata.Production}</td>
-                    <td>{newdata.Ratio}</td>
-                  </tr>
-                    </>
-                  )
-                })}
-                <br />
-                  
-                </>
-              );
-            })}
-          </tbody>
-        </Table>
-
-{/* <h1>{Yielddata.Are}</h1> */}
-              </div>
-<br />
-<Button onClick={AddnewCrop}>Add New Crop Details</Button>
-
-              {show ? (
-                      <Modal
-                        show={show}
-                        backdrop="static"
-                        keyboard={true}
-                        size="xl"
-                        onHide={() => setShow(false)}
-                        dialogClassName="modal-90w"
-                        aria-labelledby="example-custom-modal-styling-title"
-                      >
-                        <Modal.Header closeButton>
-                          <Modal.Title id="example-custom-modal-styling-title">
-                            Add Crop
-                          </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                        {/* <h1>Hello</h1> */}
-                        <label>Select Farm</label>
-              <form onSubmit={handleSubmit}>
-                <div>
-                  <select
-                    onChange={(event) => setUPIN(event.target.value)}
-                    name="UPIN"
-                  >
-                    <option selected>Select Farm</option>
-                    {farmdrop.map((farmdropnew) => {
-                      return (
-                        <>
-                          <option value={farmdropnew.UPIN}>
-                            {farmdropnew.Farmname}
-                          </option>
-                        </>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label>Crop</label>
-                  <Select
-                    isMulti
-                    value={Crop}
-                    onChange={handleChangecrop}
-                    options={options}
-                  />
-                </div>
-         <lable>Select Ratio</lable>     
-         <br />
-                {Crop.map((value, index) => (
-                  <input
-                  key={index}
-                  type="text"
-                  className="form-control_Crop"
-                  name={`value${index}`}
-                  placeholder={`${value.value}` }
-                  // value={value.value}
-                  onChange={(event) => handleChangeRatio(event, index)}
-                  />
-                  
+                        <div className="farm-section">
+                          <h4>📋 Land Details</h4>
+                          <div className="farm-info-grid">
+                            <div className="info-item-small">
+                              <span className="label">UPIN</span>
+                              <span className="value mono">{farm.UPIN}</span>
+                            </div>
+                            <div className="info-item-small">
+                              <span className="label">Survey Number</span>
+                              <span className="value">{farm.Surveynumber}</span>
+                            </div>
+                            <div className="info-item-small">
+                              <span className="label">Area (H.A.SM)</span>
+                              <span className="value">{farm.Hectare}.{farm.Are}.{farm.Square_meters}</span>
+                            </div>
+                            <div className="info-item-small">
+                              <span className="label">Land Use</span>
+                              <span className="value">{farm.Landusefor || "-"}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-<lable>Select Pro</lable>     
-                {Cropproduction.map((value, index) => (
-                  <input
-                    key={index}
-                    type="text"
-                    className="form-control_Crop"
-                    name={`value${index}`}
-                    placeholder={`${value.value}` }
-                    // value={value.value}
-                    onChange={(event) => handleChangeProduction(event, index)}
-                    />
-                  
-                ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <MdAgriculture size={48} />
+                  <p>No farms registered yet</p>
+                </div>
+              )}
+            </div>
+          </Tab>
 
-                <div className="mb-3">
-                  <label>Select Soil type</label>
-                  <input
-                    // type="email"
-                    className="form-control"
-                    placeholder="Enter your mobilenumber"
-                    onChange={(event) => setSoil_type(event.target.value)}
-                  />
+          {/* ============ TAB 3: YIELD INFORMATION ============ */}
+          <Tab
+            eventKey="yield"
+            title={<span className="tab-title-premium">📊 Crop Yield</span>}
+          >
+            <div className="tab-content-premium">
+              <div className="yield-controls">
+                <div className="control-group">
+                  <label>Select Farm</label>
+                  <select
+                    className="form-select-premium"
+                    onChange={(event) => setUPINinfo(event.target.value)}
+                  >
+                    <option value="">Choose a farm...</option>
+                    {farmdrop.map((farm) => (
+                      <option key={farm.UPIN} value={farm.UPIN}>
+                        {farm.Farmname}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <div className="mb-3">
-                  <label>Select Season</label>
-                  <input
-                    // type="email"
-                    className="form-control"
-                    placeholder="Enter your mobilenumber"
-                    onChange={(event) => setSeason(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Sow date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    placeholder="Enter your mobilenumber"
-                    onChange={(event) => setSow_date(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Harvest date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    placeholder="Enter your mobilenumber"
-                    onChange={(event) => setHarvest_date(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Production</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    placeholder="Enter your mobilenumber"
-                    onChange={(event) => setProduction(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Select Irigation sources used</label>
-                  <input
-                    // type="email"
-                    className="form-control"
-                    placeholder="Enter your mobilenumber"
-                    onChange={(event) =>
-                      setIrigation_sources_used(event.target.value)
-                    }
-                  />
-                </div>
+                <button
+                  className="btn-premium primary"
+                  onClick={getYielddata}
+                >
+                  <FiTrendingUp /> View Yield Data
+                </button>
+                <button
+                  className="btn-premium secondary"
+                  onClick={AddnewCrop}
+                >
+                  <FiEdit2 /> Add New Crop
+                </button>
+              </div>
 
-                <div></div>
-
-                <div className="d-grid">
-                  <button type="submit" className="btn btn-primary">
-                    Submit
-                  </button>
+              {Yielddata.length > 0 ? (
+                <div className="table-container-premium">
+                  <table className="data-table-premium">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Crop</th>
+                        <th>Season</th>
+                        <th>Production</th>
+                        <th>Sow Date</th>
+                        <th>Harvest Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Yielddata.map((data, idx) => (
+                        <tr key={idx}>
+                          <td>{idx + 1}</td>
+                          <td className="crop-cell">{data.Crop}</td>
+                          <td><span className="badge-season">{data.Season}</span></td>
+                          <td className="numeric">{data.Production} units</td>
+                          <td>{Moment(data.Sow_date).format("DD-MM-YY")}</td>
+                          <td>{Moment(data.Harvest_date).format("DD-MM-YY")}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              </form>
-                        </Modal.Body>
-                      </Modal>
-                    ) : null}
+              ) : (
+                <div className="empty-state">
+                  <MdGrass size={48} />
+                  <p>No crop yield data yet. Select a farm to view records.</p>
+                </div>
+              )}
+            </div>
+          </Tab>
 
-
-            
-            </Tab>
-            <Tab eventKey="Apmc bill" title="APMC Bill History" >
-              <br />
-              {/* <h1> Hello</h1> */}
-              <Table striped bordered hover className="TableAllskims">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Trade_name</th>
-              <th>Crop</th>
-              <th>Bill date</th>
-              <th>Total Bags</th>
-              <th>Rate</th>
-              <th>Other Chargs</th>
-              <th>Bill_Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Billhistorydata.map((newdata, idx) => {
-              return (
-                <>
-                  <tr>
-                    <td>{idx + 1}</td>
-                    <td>{newdata.Trade_name}</td>
-                    <td>{newdata.Crop}</td>
-                    <td>{Moment(newdata.Bill_date).format("DD-MM-YYYY")}</td>
-                    <td>{newdata.Bags}</td>
-                    <td>{newdata.Rate}</td>
-                    <td>{newdata.Bill_Amount - newdata.Amount}</td>
-                    <td>{newdata.Bill_Amount}</td>
-                   
-                  </tr>
-                </>
-              );
-            })}
-          </tbody>
-        </Table>
-            </Tab>
-          </Tabs>
-        </div>
+          {/* ============ TAB 4: BILLS & TRANSACTIONS ============ */}
+          <Tab
+            eventKey="bills"
+            title={<span className="tab-title-premium">💰 Bills & Payments</span>}
+          >
+            <div className="tab-content-premium">
+              {Billhistorydata.length > 0 ? (
+                <div className="table-container-premium">
+                  <table className="data-table-premium">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Trader</th>
+                        <th>Crop</th>
+                        <th>Date</th>
+                        <th>Bags</th>
+                        <th>Rate/Bag</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Billhistorydata.map((bill, idx) => (
+                        <tr key={idx}>
+                          <td>{idx + 1}</td>
+                          <td className="trade-cell">{bill.Trade_name}</td>
+                          <td>{bill.Crop}</td>
+                          <td>{Moment(bill.Bill_date).format("DD-MM-YY")}</td>
+                          <td className="numeric">{bill.Bags}</td>
+                          <td className="numeric">₹{bill.Rate}</td>
+                          <td className="amount-cell">₹{bill.Bill_Amount}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <MdAttachMoney size={48} />
+                  <p>No bill history available</p>
+                </div>
+              )}
+            </div>
+          </Tab>
+        </Tabs>
       </div>
-    </>
+
+      {/* ============ ADD CROP MODAL ============ */}
+      <Modal show={show} onHide={() => setShow(false)} size="lg" centered>
+        <Modal.Header closeButton className="modal-header-premium">
+          <Modal.Title>🌾 Add New Crop Record</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modal-body-premium">
+          <form onSubmit={handleSubmit}>
+            <div className="form-row-2col">
+              <div className="form-group">
+                <label>Select Farm</label>
+                <select
+                  className="form-control"
+                  onChange={(event) => setUPIN(event.target.value)}
+                  required
+                >
+                  <option value="">Choose a farm...</option>
+                  {farmdrop.map((farm) => (
+                    <option key={farm.UPIN} value={farm.UPIN}>
+                      {farm.Farmname}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Season</label>
+                <select
+                  className="form-control"
+                  onChange={(e) => setSeason(e.target.value)}
+                  required
+                >
+                  <option value="">Select Season</option>
+                  <option value="Kharif">Kharif</option>
+                  <option value="Rabi">Rabi</option>
+                  <option value="Summer">Summer</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Select Crops</label>
+              <Select
+                isMulti
+                value={Crop}
+                onChange={handleChangecrop}
+                options={options}
+              />
+            </div>
+
+            <div className="form-row-2col">
+              <div className="form-group">
+                <label>Sow Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  onChange={(e) => setSow_date(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Harvest Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  onChange={(e) => setHarvest_date(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Soil Type</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter soil type"
+                onChange={(e) => setSoil_type(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Irrigation Sources Used</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="e.g., Well, Borewell, Canal"
+                onChange={(e) => setIrigation_sources_used(e.target.value)}
+              />
+            </div>
+
+            <div className="modal-actions">
+              <button type="button" className="btn-cancel" onClick={() => setShow(false)}>
+                Cancel
+              </button>
+              <button type="submit" className="btn-submit">
+                Save Crop Record
+              </button>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
+    </div>
   ) : (
-    <>
-      <div>
-        <h2>Login Require</h2>
-      </div>
-    </>
+    <div className="login-required">
+      <h2>🔐 Login Required</h2>
+      <p>Please log in to view your account details</p>
+    </div>
   );
 }
 

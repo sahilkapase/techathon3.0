@@ -1,0 +1,502 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== FARMER INFORMATION ====================
+model FarmerInfo {
+  id                    Int       @id @default(autoincrement())
+  Farmerid              String    @unique
+  Name                  String
+  Gender                String    @default("Female")
+  Category              String?
+  Qualification         String?
+  Dateofbirth           DateTime?
+  Physical_handicap     String?
+  Adharnum              BigInt?
+  Rationcardcategory    String?
+  Rationcardnum         BigInt?
+  State                 String    @default("Maharashtra")
+  District              String?
+  Taluka                String?
+  Fake                  Boolean   @default(false)
+  Village               String?
+  Pincode               Int?
+  Address               String?
+  Mobilenum             BigInt    @unique
+  Email                 String?
+  Bankname              String?
+  IFSC                  String?
+  Accountnum            BigInt?
+  Farmertype            String?
+  Password              String?
+  Contract_Farming      String    @default("No")
+  CropTypes             String[]  @default([])
+  LandSize              Float     @default(0)
+  PreferredLanguage     String    @default("English")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farms                 Farm[]
+  adhars                AdhaarDetails[]
+  cropHistories         CropHistoryForm[]
+  messages              Message[]
+  notifications         Notification[]
+  expertMessages        ExpertMessage[]
+  apyRecords            APY[]
+  loanEligibility       LoanEligibility?
+  loanApplications      LoanApplication[]
+  subsidies             SubsidyRecord[]
+  creditScore           CreditScore?
+}
+
+// ==================== FARM INFORMATION ====================
+model Farm {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  District              String?
+  Taluka                String?
+  Village               String?
+  Surveynumber          Int?
+  UPIN                  Int?
+  Oldsurveynumber       Int?
+  Hectare               Float?
+  Are                   Float?
+  Square_meters         Float?
+  Totalassessmentrs     String?
+  Landusefor            String?
+  Farmname              String?
+  Khatanum              Int?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  irrigationSources     Irigation[]
+  bills                 Bill[]
+  
+  @@index([farmerId])
+}
+
+// ==================== CROP HISTORY ====================
+model CropHistoryForm {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  Soil_type             String?
+  Season                String?
+  Sow_date              DateTime?
+  Harvest_date          DateTime?
+  Production            Float?
+  Irigation_sources_used String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+}
+
+// ==================== IRRIGATION ====================
+model Irigation {
+  id                    Int       @id @default(autoincrement())
+  farmId                Int
+  name                  String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farm                  Farm @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  
+  @@index([farmId])
+}
+
+// ==================== ADMIN ====================
+model AdminDetails {
+  id                    Int       @id @default(autoincrement())
+  AdminName             String
+  Email                 String    @unique
+  Password              String
+  AdminType             String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== EXPERTS ====================
+model ExpertsRegistration {
+  id                    Int       @id @default(autoincrement())
+  ExpertId              String    @unique
+  Name                  String
+  Email                 String    @unique
+  Password              String
+  Qualification         String?
+  Category              String?
+  Specialization        String?
+  Contact               BigInt?
+  District              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  messages              ExpertMessage[]
+}
+
+model ExpertMessage {
+  id                    Int       @id @default(autoincrement())
+  expertId              Int
+  farmerId              Int
+  message               String?
+  createdAt             DateTime  @default(now())
+
+  // Relations
+  expert                ExpertsRegistration @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([expertId])
+  @@index([farmerId])
+}
+
+// ==================== SCHEMES ====================
+model SchemeDetails {
+  id                    Int       @id @default(autoincrement())
+  SchemeId              String    @unique
+  SchemeName            String?
+  Description           String?
+  Status                String    @default("Active")
+  CropTypes             String[]  @default([])
+  MinLandSize           Float?
+  MaxLandSize           Float?
+  Season                String[]  @default([])
+  BenefitAmount         String?
+  ApplicationDeadline   DateTime?
+  ApprovalProcess       String?
+  DocumentsRequired     String[]  @default([])
+  SectorFocus           String?
+  Region                String[]  @default([])
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== INSURANCE ====================
+model InsuranceCompany {
+  id                    Int       @id @default(autoincrement())
+  InsuranceId           String    @unique
+  CompanyName           String?
+  ContactNumber         String?
+  Email                 String?
+  Website               String?
+  Address               String?
+  CoverageArea          String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model InsuranceCompanyLogin {
+  id                    Int       @id @default(autoincrement())
+  InsuranceId           String    @unique
+  Email                 String    @unique
+  Password              String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== TRADER ====================
+model TraderDetails {
+  id                    Int       @id @default(autoincrement())
+  TraderId              String    @unique
+  Name                  String?
+  Email                 String    @unique
+  Password              String?
+  Contact               BigInt?
+  Address               String?
+  District              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== APMC BILL ====================
+model Bill {
+  id                    Int       @id @default(autoincrement())
+  farmId                Int
+  Trade_name            String?
+  Crop                  String?
+  Bill_date             DateTime?
+  Bags                  Int?
+  Rate                  Float?
+  Amount                Float?
+  Bill_Amount           Float?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farm                  Farm @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  
+  @@index([farmId])
+}
+
+// ==================== APMC LOGIN ====================
+model APMCLogin {
+  id                    Int       @id @default(autoincrement())
+  APMCId                String    @unique
+  Email                 String    @unique
+  Password              String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== DISTRICT ====================
+model District {
+  id                    Int       @id @default(autoincrement())
+  DistrictName          String    @unique
+  State                 String    @default("Maharashtra")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== SOIL TYPE ====================
+model DistrictwiseSoil {
+  id                    Int       @id @default(autoincrement())
+  District              String    @unique
+  SoilType              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== AADHAR DETAILS ====================
+model AdhaarDetails {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  AdhaarNumber          BigInt    @unique
+  Name                  String?
+  DateOfBirth           DateTime?
+  Gender                String?
+  Address               String?
+  Status                String    @default("Pending")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+}
+
+// ==================== MESSAGES ====================
+model Message {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  content               String?
+  messageType           String    @default("text")
+  status                String    @default("sent")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+}
+
+// ==================== NOTIFICATIONS ====================
+model Notification {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  title                 String?
+  message               String?
+  notificationType      String    @default("info")
+  status                String    @default("unread")
+  scheduleDate          DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+  @@index([scheduleDate])
+}
+
+// ==================== TRAINING PROGRAMS ====================
+model TrainingProgram {
+  id                    Int       @id @default(autoincrement())
+  ProgramName           String?
+  Description           String?
+  TrainingType          String?
+  Duration              String?
+  Location              String?
+  Status                String    @default("Active")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== GST DETAILS ====================
+model GSTDetails {
+  id                    Int       @id @default(autoincrement())
+  GSTNumber             String    @unique
+  CompanyName           String?
+  Email                 String?
+  Contact               String?
+  Address               String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== CULTIVATED AREA ====================
+model CultivatedArea {
+  id                    Int       @id @default(autoincrement())
+  AreaName              String?
+  Size                  Float?
+  Unit                  String    @default("acres")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ==================== APY (Atal Pension Yojana) ====================
+model APY {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  contributionAmount    Float?
+  pensionAmount         Float?
+  subscriberName        String?
+  subscriberContact     String?
+  status                String    @default("Active")
+  enrollmentDate        DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+}
+
+// ==================== LOAN ELIGIBILITY ====================
+model LoanEligibility {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int       @unique
+  annualIncome          Float?
+  landSize              Float?
+  irrigationStatus      String?
+  primaryCrop           String?
+  eligibleLoanAmount    Float?
+  interestRate          Float?
+  maxLoanTerm           Int       @default(5)
+  subsidyPercentage     Float?
+  creditScore           Int?
+  loanHistory           String?
+  defaultHistory        Boolean   @default(false)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+}
+
+// ==================== LOAN APPLICATION ====================
+model LoanApplication {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  loanAmount            Float
+  loanPurpose           String?
+  repaymentPeriod       Int?
+  collateral            String?
+  documentsSubmitted    String[]  @default([])
+  status                String    @default("Applied")
+  statusReason          String?
+  bankName              String?
+  approvedAmount        Float?
+  approvedInterestRate  Float?
+  emi                   Float?
+  approvalDate          DateTime?
+  disbursalDate         DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  repayments            Repayment[]
+  
+  @@index([farmerId])
+  @@index([status])
+}
+
+// ==================== REPAYMENT ====================
+model Repayment {
+  id                    Int       @id @default(autoincrement())
+  loanId                Int
+  dueDate               DateTime
+  amount                Float
+  paidDate              DateTime?
+  status                String    @default("Pending")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  loan                  LoanApplication @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  
+  @@index([loanId])
+}
+
+// ==================== SUBSIDY RECORD ====================
+model SubsidyRecord {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  subsidyName           String?
+  subsidyType           String?
+  amount                Float?
+  crops                 String[]  @default([])
+  minLandSize           Float?
+  maxLandSize           Float?
+  regionRestriction     String?
+  farmerCategory        String[]  @default([])
+  applicationDeadline   DateTime?
+  disbursalDate         DateTime?
+  status                String    @default("Available")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+  @@index([subsidyType])
+}
+
+// ==================== CREDIT SCORE ====================
+model CreditScore {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int       @unique
+  score                 Int?
+  scoreGrade            String?
+  loanHistory           String?
+  repaymentRecord       String?
+  defaultCount          Int       @default(0)
+  lastUpdated           DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // Relations
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  
+  @@index([farmerId])
+}
+
+// ==================== USER (Generic User) ====================
+model User {
+  id                    Int       @id @default(autoincrement())
+  email                 String    @unique
+  password              String
+  userType              String    @default("farmer")
+  name                  String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}

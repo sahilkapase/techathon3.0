@@ -7,13 +7,19 @@ var bodyParser = require('body-parser');
 
 const app = express();
 const path = require('path');
-const db = require('./config/mongoose')
+
+// ==================== PostgreSQL (Neon) Database Connection ====================
+const { connectDB, prisma } = require('./config/prisma');
+connectDB(); // Connect to PostgreSQL via Prisma
+
+// Make Prisma available globally
+global.prisma = prisma;
 
 
 
 
 app.use(express.json());
-app.use(express.urlencoded());// always write first as a middle ware
+app.use(express.urlencoded({ extended: true }));// always write first as a middle ware
 app.use(cors());
 app.use(cookieparser());// this both middleware is needed to run before router
 
@@ -33,6 +39,7 @@ server.listen(socketport, function (err) {
 })
 
 app.use('/', require('./routes/index_route'));
+app.use('/api/financial', require('./routes/financial'));
 app.use(express.static('static'));
 // app.use(bodyParser.json());
 

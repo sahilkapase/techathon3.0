@@ -1,842 +1,559 @@
-const admin_details = require("../models/admin_details");
-const farmer_info = require("../models/farmer_info");
+/**
+ * Admin Controller - Migrated to Prisma ORM
+ * Replaces MongoDB with PostgreSQL via Prisma
+ */
+
+const { prisma } = require('../config/prisma');
+
 const category = ["SC", "ST", "OBC", "EWS", "GENERAL"];
-const bill = require('../models/bill');
 
-//Admin login
-module.exports.login = function (req, res) {
-    if (req.body.Username && req.body.Password) {
-        try {
-            admin_details.findOne({ Username: req.body.Username }, function (err, user) {
-                if (!user) {
-                    return res.json({
-                        status: "error",
-                        error: "User is not found!!!"
-                    });
-                }
-                else {
-                    if (req.body.Password == user.Password) {
-                        var userobg = user.toObject();
-                        delete userobg.Password;
-                        return res.status(200).json(userobg);
-                    }
-                    else {
-                        return res.json({
-                            error: "Password is incorrect!!!",
-                            status: "error"
-                        });
-                    }
-                }
-            });
-        } catch (error) {
-            return res.json({
-                status: "error",
-                error: "Something went wrong please try after some time !!!"
-            });
-        }
+// ==================== ADMIN LOGIN ====================
+module.exports.login = async function (req, res) {
+  try {
+    if (!req.body.Username || !req.body.Password) {
+      return res.json({
+        error: "Some problem in required fields!",
+        status: "error"
+      });
     }
-    else {
-        return res.json({
-            error: "Some problem in required Fields!!!",
-            status: "error"
-        });
-    }
-}
 
-//API to find farmers from their ID
-module.exports.findfarmerbyid = function (req, res) {
-    try {
+    // Note: AdminDetails doesn't have Username field, using Email instead
+    const admin = await prisma.adminDetails.findUnique({
+      where: { Email: req.body.Username }
+    });
 
-        farmer_info.findOne({ Farmerid: req.params.Farmerid }, function (err, farmer) {
-            if (!farmer) {
-                return res.json({
-                    status: "error",
-                    error: "Unable to find farmer !!!"
-                });
-            }
-            else {
-                var farmerObj = farmer.toObject();
-                delete farmerObj.Password;
-                return res.json(farmerObj);
-            }
-        })
-    } catch (error) {
-        return res.json({
-            status: "error",
-            error: "Something went wrong please try again after some time !!!"
-        });
+    if (!admin) {
+      return res.json({
+        status: "error",
+        error: "User is not found!"
+      });
     }
+
+    if (req.body.Password !== admin.Password) {
+      return res.json({
+        error: "Password is incorrect!",
+        status: "error"
+      });
+    }
+
+    const { Password, ...adminObj } = admin;
+    return res.status(200).json(adminObj);
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try after some time!"
+    });
+  }
 };
 
-//API to find farmers from their Mobilenumber
-module.exports.findfarmerbymobilenum = function (req, res) {
-    try {
+// ==================== FIND FARMER BY ID ====================
+module.exports.findfarmerbyid = async function (req, res) {
+  try {
+    const farmer = await prisma.farmerInfo.findUnique({
+      where: { Farmerid: req.params.Farmerid },
+      include: {
+        farms: true,
+        cropHistories: true,
+        adhars: true,
+        notifications: true
+      }
+    });
 
-        farmer_info.findOne({ Mobilenum: req.params.Mobilenum }, function (err, farmer) {
-            if (!farmer) {
-                return res.json({
-                    status: "error",
-                    error: "Unable to find farmer !!!"
-                });
-            }
-            else {
-                var farmerObj = farmer.toObject();
-                delete farmerObj.Password;
-                return res.json(farmerObj);
-            }
-        })
-    } catch (error) {
-        return res.json({
-            status: "error",
-            error: "Something went wrong please try again after some time !!!"
-        });
+    if (!farmer) {
+      return res.json({
+        status: "error",
+        error: "Unable to find farmer!"
+      });
     }
+
+    const { Password, ...farmerObj } = farmer;
+    return res.json(farmerObj);
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
 };
 
-//More information about farmer
+// ==================== FIND FARMER BY MOBILE ====================
+module.exports.findfarmerbymobilenum = async function (req, res) {
+  try {
+    const farmer = await prisma.farmerInfo.findUnique({
+      where: { Mobilenum: req.params.Mobilenum },
+      include: {
+        farms: true,
+        cropHistories: true,
+        adhars: true
+      }
+    });
 
-module.exports.farmerinformation = function (req, res) {
-    try {
-
-        farmer_info.findOne({ Farmerid: req.params.Farmerid }, function (err, farmerdata) {
-            if (err) {
-                console.log(err);
-                return res.json({
-                    status: "error",
-                    error: "Something went wrong"
-                })
-            }
-            else {
-                return res.json(farmerdata);
-            }
-        })
+    if (!farmer) {
+      return res.json({
+        status: "error",
+        error: "Unable to find farmer!"
+      });
     }
-    catch (err) {
-        console.log(err)
-        return res.json({
-            status: "error",
-            error: "Something went wrong"
-        })
-    }
-}
 
+    const { Password, ...farmerObj } = farmer;
+    return res.json(farmerObj);
 
-
-//API to find farmers from their adharnumber
-module.exports.findfarmerbyadharnum = function (req, res) {
-    try {
-
-        farmer_info.findOne({ Adharnum: req.params.Adharnum }, function (err, farmer) {
-            if (!farmer) {
-                return res.json({
-                    status: "error",
-                    error: "Unable to find farmer !!!"
-                });
-            }
-            else {
-                var farmerObj = farmer.toObject();
-                delete farmerObj.Password;
-                return res.json(farmerObj);
-            }
-        })
-    } catch (error) {
-        return res.json({
-            status: "error",
-            error: "Something went wrong please try again after some time !!!"
-        });
-    }
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
 };
 
-//API to get details of all farmers
-module.exports.findallfarmers = function (req, res) {
-    try {
-
-        farmer_info.find({}, "Farmerid Name Mobilenum", function (err, farmer) {
-            if (!farmer) {
-                return res.json({
-                    status: "error",
-                    error: "Unable to find farmer !!!"
-                });
-            }
-            else {
-                return res.json(farmer);
-            }
-        })
-    } catch (error) {
-        return res.json({
-            status: "error",
-            error: "Something went wrong please try again after some time !!!"
-        });
+// ==================== FARMER INFORMATION ====================
+module.exports.farmerinformation = async function (req, res) {
+  try {
+    if (!req.params.Farmerid) {
+      return res.json({
+        status: "error",
+        error: "Farmer ID is required!"
+      });
     }
-}
 
-//API to find farmers by area and category
-module.exports.findmanyfarmers = function (req, res) {
-    try {
-        if (req.params.District == "0" && req.params.Taluka == "0" && req.params.village == "0" && req.params.Category == "0" && req.params.Farmertype == "0") {
-            farmer_info.find({}, "Farmerid Name", function (err, farmers) {
-                /////////////////////////////////////////////////////here we need to send selected information  
-                if (!farmers) {
-                    return res.json({
-                        status: "error",
-                        error: "Unable to find farmer !!!"
-                    });
-                }
-                else {
-                    return res.json(farmers);
-                }
-            })
-        }
-        else if (req.params.Taluka == 0 && req.params.village == 0 && req.params.Category == 0 && req.params.Farmertype == 0) {
-            farmer_info.find({ District: req.params.District }, "Farmerid Name", function (err, farmers) {
-                /////////////////////////////////////////////////////here we need to send selected information  
-                if (!farmers) {
-                    return res.json({
-                        status: "error",
-                        error: "Unable to find farmer !!!"
-                    });
-                }
-                else {
-                    return res.json(farmers);
-                }
-            })
-        }
-        else if ((req.params.village == 0) && (req.params.Category == 0) && (req.params.Farmertype == 0)) {
-            // console.log("vk")
-            farmer_info.find({ District: req.params.District, Taluka: req.params.Taluka }, "Farmerid Name", function (err, farmers) {
-                /////////////////////////////////////////////////////here we need to send selected information  
-                if (!farmers) {
-                    return res.json({
-                        status: "error",
-                        error: "Unable to find farmer !!!"
-                    });
-                }
-                else {
-                    return res.json(farmers);
-                }
-            })
-        }
-        else if (req.params.Category == 0 && req.params.Farmertype == 0) {
-            farmer_info.find({ District: req.params.District, Taluka: req.params.Taluka, Village: req.params.Village }, "Farmerid Name", function (err, farmers) {
-                /////////////////////////////////////////////////////here we need to send selected information  
-                if (!farmers) {
-                    return res.json({
-                        status: "error",
-                        error: "Unable to find farmer !!!"
-                    });
-                }
-                else {
-                    return res.json(farmers);
-                }
-            })
-        }
-        else if (req.params.Farmertype == 0) {
-            farmer_info.find({ District: req.params.District, Taluka: req.params.Taluka, Village: req.params.Village, Category: req.params.Category }, "Farmerid Name", function (err, farmers) {
-                /////////////////////////////////////////////////////here we need to send selected information  
-                if (!farmers) {
-                    return res.json({
-                        status: "error",
-                        error: "Unable to find farmer !!!"
-                    });
-                }
-                else {
-                    return res.json(farmers);
-                }
-            })
-        }
-        else {
-            farmer_info.find({ District: req.params.District, Taluka: req.params.Taluka, Village: req.params.Village, Category: req.params.Category, Farmertype: req.params.Farmertype }, "Farmerid Name", function (err, farmers) {
-                /////////////////////////////////////////////////////here we need to send selected information  
-                if (!farmers) {
-                    return res.json({
-                        status: "error",
-                        error: "Unable to find farmer !!!"
-                    });
-                }
-                else {
-                    return res.json(farmers);
-                }
-            })
-        }
+    const farmer = await prisma.farmerInfo.findUnique({
+      where: { Farmerid: req.params.Farmerid },
+      include: {
+        farms: {
+          include: {
+            irrigationSources: true,
+            bills: true
+          }
+        },
+        cropHistories: true,
+        adhars: true,
+        messages: true,
+        notifications: true,
+        apyRecords: true
+      }
+    });
+
+    if (!farmer) {
+      return res.json({
+        status: "error",
+        error: "Unable to find farmer!"
+      });
     }
-    catch (err) {
-        console.log(err);
-        return res.json({
-            status: "error",
-            error: "Something went wrong please try again after some time"
-        })
-    };
-}
 
+    const { Password, ...farmerObj } = farmer;
+    return res.json(farmerObj);
 
-////////////////////////////////////////////////Regeistration details for admin home page///////////////////////////////////////////////
-//Rejistered farmers details for admin home page  
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
+};
+
+// ==================== FIND ALL FARMERS (Alias for all_farmers) ====================
+module.exports.findallfarmers = async function (req, res) {
+  try {
+    const farmers = await prisma.farmerInfo.findMany({
+      select: {
+        id: true,
+        Farmerid: true,
+        Name: true,
+        Mobilenum: true,
+        Email: true,
+        District: true,
+        Category: true,
+        Farmertype: true,
+        State: true
+      }
+    });
+
+    return res.json({
+      status: "ok",
+      count: farmers.length,
+      farmers
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
+};
+
+// ==================== FIND FARMER BY AADHAAR ====================
+module.exports.findfarmerbyadharnum = async function (req, res) {
+  try {
+    const { Adharnum } = req.params;
+
+    const adhaar = await prisma.adhaarDetails.findUnique({
+      where: { AdhaarNumber: BigInt(Adharnum) },
+      include: {
+        farmer: {
+          select: {
+            id: true,
+            Farmerid: true,
+            Name: true,
+            Mobilenum: true,
+            Email: true,
+            District: true,
+            Category: true
+          }
+        }
+      }
+    });
+
+    if (!adhaar) {
+      return res.json({
+        status: "error",
+        error: "Farmer with this Aadhaar not found!"
+      });
+    }
+
+    return res.json({
+      status: "ok",
+      farmer: adhaar.farmer
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
+};
+
+// ==================== FIND MANY FARMERS ====================
+module.exports.findmanyfarmers = async function (req, res) {
+  try {
+    const { District, Taluka, Village, Category, Farmertype } = req.params;
+
+    const farmers = await prisma.farmerInfo.findMany({
+      where: {
+        ...(District && { District }),
+        ...(Taluka && { Taluka }),
+        ...(Village && { Village }),
+        ...(Category && { Category }),
+        ...(Farmertype && { Farmertype })
+      },
+      select: {
+        id: true,
+        Farmerid: true,
+        Name: true,
+        Mobilenum: true,
+        Email: true,
+        District: true,
+        Category: true,
+        Farmertype: true
+      }
+    });
+
+    return res.json({
+      status: "ok",
+      count: farmers.length,
+      farmers
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
+};
+
+// ==================== REGISTERED FARMER DETAILS ====================
 module.exports.registeredfarmerdetails = async function (req, res) {
-    try {
-        let Totalregisteredfarmers = await farmer_info.count();
-        let TotalSCfarmers = await farmer_info.count({ Category: "SC" });
-        let TotalSTfarmers = await farmer_info.count({ Category: "ST" });
-        let TotalOBCfarmers = await farmer_info.count({ Category: "OBC" });
-        let TotalEWSfarmers = await farmer_info.count({ Category: "EWS" });
-        let TotalGENERALfarmers = await farmer_info.count({ Category: "GENERAL" });
+  try {
+    const farmers = await prisma.farmerInfo.findMany({
+      where: { Fake: false },
+      include: {
+        farms: true,
+        cropHistories: true,
+        adhars: true
+      }
+    });
 
-        return res.json({
-            registeredfarmers: Totalregisteredfarmers,
-            SCfarmers: TotalSCfarmers,
-            STfarmers: TotalSTfarmers,
-            OBCfarmers: TotalOBCfarmers,
-            EWSfarmers: TotalEWSfarmers,
-            GENERALfarmers: TotalGENERALfarmers,
-        })
+    return res.json({
+      status: "ok",
+      count: farmers.length,
+      farmers
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
+};
+
+// ==================== GET ALL FARMERS ====================
+module.exports.all_farmers = async function (req, res) {
+  try {
+    const farmers = await prisma.farmerInfo.findMany({
+      select: {
+        id: true,
+        Farmerid: true,
+        Name: true,
+        Mobilenum: true,
+        Email: true,
+        District: true,
+        Category: true,
+        Farmertype: true,
+        State: true
+      }
+    });
+
+    return res.json({
+      status: "ok",
+      count: farmers.length,
+      farmers
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong please try again after some time!"
+    });
+  }
+};
+
+// ==================== APPROVE FARMER ====================
+module.exports.approveFarmer = async function (req, res) {
+  try {
+    const { Farmerid } = req.params;
+
+    const farmer = await prisma.farmerInfo.update({
+      where: { Farmerid },
+      data: { Fake: false }
+    });
+
+    return res.json({
+      status: "ok",
+      message: "Farmer approved successfully!",
+      farmer
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong!"
+    });
+  }
+};
+
+// ==================== REJECT FARMER ====================
+module.exports.rejectFarmer = async function (req, res) {
+  try {
+    const { Farmerid } = req.params;
+
+    const farmer = await prisma.farmerInfo.update({
+      where: { Farmerid },
+      data: { Fake: true }
+    });
+
+    return res.json({
+      status: "ok",
+      message: "Farmer rejected!",
+      farmer
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong!"
+    });
+  }
+};
+
+// ==================== UPDATE FARMER ====================
+module.exports.updateFarmer = async function (req, res) {
+  try {
+    const { Farmerid } = req.params;
+    const updateData = { ...req.body };
+
+    // Remove sensitive fields
+    delete updateData.Farmerid;
+    delete updateData._id;
+
+    const farmer = await prisma.farmerInfo.update({
+      where: { Farmerid },
+      data: updateData
+    });
+
+    const { Password, ...farmerObj } = farmer;
+    return res.json({
+      status: "ok",
+      message: "Farmer updated successfully!",
+      farmer: farmerObj
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong!"
+    });
+  }
+};
+
+// ==================== GET FARMER STATISTICS ====================
+module.exports.getFarmerStats = async function (req, res) {
+  try {
+    const totalFarmers = await prisma.farmerInfo.count();
+    const farmersByType = await prisma.farmerInfo.groupBy({
+      by: ['Farmertype'],
+      _count: { id: true }
+    });
+
+    const farmersByDistrict = await prisma.farmerInfo.groupBy({
+      by: ['District'],
+      _count: { id: true }
+    });
+
+    const farmersByCategory = await prisma.farmerInfo.groupBy({
+      by: ['Category'],
+      _count: { id: true }
+    });
+
+    return res.json({
+      status: "ok",
+      totalFarmers,
+      farmersByType,
+      farmersByDistrict,
+      farmersByCategory
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong!"
+    });
+  }
+};
+
+// ==================== SEND NOTIFICATION TO FARMERS ====================
+module.exports.sendNotificationToFarmers = async function (req, res) {
+  try {
+    const { farmerId, title, message } = req.body;
+
+    if (!farmerId || !title || !message) {
+      return res.json({
+        status: "error",
+        error: "Missing required fields!"
+      });
     }
-    catch (err) {
-        console.log(err);
-        return res.json({
-            error: "Something went wrong please try again after some time",
-            sattus: "error"
-        })
-    }
-}
 
-//Registered farmers details for admin home page district wise
-module.exports.districtwise = async function (req, res) {
-    try {
-        let districts = await farmer_info.distinct("District")
-        let data = []
-        let highest = [
+    const notification = await prisma.notification.create({
+      data: {
+        farmerId,
+        title,
+        message,
+        notificationType: "admin",
+        status: "unread"
+      }
+    });
 
-        ]
-        for (let i = 0; i < districts.length; i++) {
-            p = {
+    return res.json({
+      status: "ok",
+      message: "Notification sent successfully!",
+      notification
+    });
 
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong!"
+    });
+  }
+};
+
+// ==================== GET BILLS ====================
+module.exports.getBills = async function (req, res) {
+  try {
+    const bills = await prisma.bill.findMany({
+      include: {
+        farm: {
+          include: {
+            farmer: {
+              select: {
+                Farmerid: true,
+                Name: true,
+                Mobilenum: true
+              }
             }
-            p['District'] = districts[i];
-
-            for (let j = 0; j < 5; j++) {
-                let info = await farmer_info.count({ District: districts[i], Category: category[j] });
-                p[category[j]] = info;
-                if (i == 0) {
-                    temp = {}
-                    temp["Category"] = category[j]
-                    temp["Registered_Farmers"] = info
-                    temp["District"] = districts[i]
-                    highest.push(temp)
-                }
-                else {
-                    if (highest[j]["Registered_Farmers"] < info) {
-                        highest[j]["District"] = districts[i]
-                        highest[j]["Registered_Farmers"] = info
-                    }
-                }
-            }
-            if (districts[i] == req.params.District) {
-                data.push(p);
-            }
+          }
         }
-        return res.json({ data, highest });
+      }
+    });
+
+    return res.json({
+      status: "ok",
+      count: bills.length,
+      bills
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong!"
+    });
+  }
+};
+
+// ==================== CREATE ADMIN ====================
+module.exports.createAdmin = async function (req, res) {
+  try {
+    const { AdminName, Email, Password, AdminType } = req.body;
+
+    if (!AdminName || !Email || !Password || !AdminType) {
+      return res.json({
+        status: "error",
+        error: "Missing required fields!"
+      });
     }
-    catch (err) {
-        console.log(err);
-        return res.json({
-            error: "Something went wrong",
-            status: "error"
-        })
-    }
-}
 
-//Registered farmers details for admin home page talukawise
-module.exports.talukawise = async function (req, res) {
-    try {
-        let taluka = await farmer_info.distinct("Taluka", { District: req.params.District });
-        let data = []
-        let highest = [
+    const admin = await prisma.adminDetails.create({
+      data: {
+        AdminName,
+        Email,
+        Password, // TODO: Hash password in production
+        AdminType
+      }
+    });
 
-        ]
-        for (let i = 0; i < taluka.length; i++) {
-            p = {
+    const { Password: _, ...adminObj } = admin;
+    return res.json({
+      status: "ok",
+      message: "Admin created successfully!",
+      admin: adminObj
+    });
 
-            }
-            p['Taluka'] = taluka[i];
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      status: "error",
+      error: "Something went wrong!"
+    });
+  }
+};
 
-            for (let j = 0; j < 5; j++) {
-                let info = await farmer_info.count({ District: req.params.District, Taluka: taluka[i], Category: category[j] });
-                p[category[j]] = info;
-                if (i == 0) {
-                    temp = {}
-                    temp["Category"] = category[j]
-                    temp["Registered_Farmers"] = info
-                    temp["Taluka"] = taluka[i]
-                    highest.push(temp)
-                }
-                else {
-                    if (highest[j]["Registered_Farmers"] < info) {
-                        highest[j]["Taluka"] = taluka[i]
-                        highest[j]["Registered_Farmers"] = info
-                    }
-                }
-            }
-            if (taluka[i] == req.params.Taluka) {
-                data.push(p);
-            }
-        }
-        return res.json({ data, highest });
-    }
-    catch (err) {
-        console.log(err);
-        return res.json({
-            error: "Something went wrong",
-            status: "error"
-        })
-    }
-}
-
-//Registered farmers details for admin home page village wise
-module.exports.villagewise = async function (req, res) {
-    try {
-        let village = await farmer_info.distinct("Village", { District: req.params.District, Taluka: req.params.Taluka });
-        let data = []
-        let highest = [
-
-        ]
-        for (let i = 0; i < village.length; i++) {
-            p = {
-
-            }
-            p['Village'] = village[i];
-
-            for (let j = 0; j < 5; j++) {
-                let info = await farmer_info.count({ District: req.params.District, Taluka: req.params.Taluka, Village: village[i], Category: category[j] });
-                p[category[j]] = info;
-
-                if (i == 0) {
-                    temp = {}
-                    temp["Category"] = category[j]
-                    temp["Registered_Farmers"] = info
-                    temp["Village"] = village[i]
-                    highest.push(temp)
-                }
-                else {
-                    if (highest[j]["Registered_Farmers"] < info) {
-                        highest[j]["Village"] = village[i]
-                        highest[j]["Registered_Farmers"] = info
-                    }
-                }
-
-            }
-
-            if (village[i] == req.params.Village) {
-                data.push(p);
-
-            }
-        }
-        return res.json({ data, highest });
-    }
-    catch (err) {
-        console.log(err);
-        return res.json({
-            error: "Something went wrong",
-            status: "error"
-        })
-    }
-}
-
-//analysis of farmers registration
-module.exports.analysis = async function (req, res) {
-    if (req.params.Taluka == 0 && req.params.Village == 0) {
-        try {
-            let districts = await farmer_info.distinct("District")
-            let data = []
-            let highest = [
-
-            ]
-            for (let i = 0; i < districts.length; i++) {
-                p = {
-
-                }
-                p['District'] = districts[i];
-
-                for (let j = 0; j < 5; j++) {
-                    let info = await farmer_info.count({ District: districts[i], Category: category[j] });
-                    p[category[j]] = info;
-                    if (i == 0) {
-                        temp = {}
-                        temp["Category"] = category[j]
-                        temp["Registered_Farmers"] = info
-                        temp["District"] = districts[i]
-                        highest.push(temp)
-                    }
-                    else {
-                        if (highest[j]["Registered_Farmers"] < info) {
-                            highest[j]["District"] = districts[i]
-                            highest[j]["Registered_Farmers"] = info
-                        }
-                    }
-                }
-                if (districts[i] == req.params.District) {
-                    data.push(p);
-                }
-            }
-            return res.json({ data, highest });
-        }
-        catch (err) {
-            console.log(err);
-            return res.json({
-                error: "Something went wrong",
-                status: "error"
-            })
-        }
-    }
-    else if (req.params.Village == 0) {
-        try {
-            let taluka = await farmer_info.distinct("Taluka", { District: req.params.District });
-            let data = []
-            let highest = [
-
-            ]
-            for (let i = 0; i < taluka.length; i++) {
-                p = {
-
-                }
-                p['Taluka'] = taluka[i];
-
-                for (let j = 0; j < 5; j++) {
-                    let info = await farmer_info.count({ District: req.params.District, Taluka: taluka[i], Category: category[j] });
-                    p[category[j]] = info;
-                    if (i == 0) {
-                        temp = {}
-                        temp["Category"] = category[j]
-                        temp["Registered_Farmers"] = info
-                        temp["Taluka"] = taluka[i]
-                        highest.push(temp)
-                    }
-                    else {
-                        if (highest[j]["Registered_Farmers"] < info) {
-                            highest[j]["Taluka"] = taluka[i]
-                            highest[j]["Registered_Farmers"] = info
-                        }
-                    }
-                }
-                if (taluka[i] == req.params.Taluka) {
-                    data.push(p);
-                }
-            }
-            return res.json({ data, highest });
-        }
-        catch (err) {
-            console.log(err);
-            return res.json({
-                error: "Something went wrong",
-                status: "error"
-            })
-        }
-    }
-    else {
-        try {
-            let village = await farmer_info.distinct("Village", { District: req.params.District, Taluka: req.params.Taluka });
-            let data = []
-            let highest = [
-
-            ]
-            for (let i = 0; i < village.length; i++) {
-                p = {
-
-                }
-                p['Village'] = village[i];
-
-                for (let j = 0; j < 5; j++) {
-                    let info = await farmer_info.count({ District: req.params.District, Taluka: req.params.Taluka, Village: village[i], Category: category[j] });
-                    p[category[j]] = info;
-
-                    if (i == 0) {
-                        temp = {}
-                        temp["Category"] = category[j]
-                        temp["Registered_Farmers"] = info
-                        temp["Village"] = village[i]
-                        highest.push(temp)
-                    }
-                    else {
-                        if (highest[j]["Registered_Farmers"] < info) {
-                            highest[j]["Village"] = village[i]
-                            highest[j]["Registered_Farmers"] = info
-                        }
-                    }
-
-                }
-
-                if (village[i] == req.params.Village) {
-                    data.push(p);
-
-                }
-            }
-            return res.json({ data, highest });
-        }
-        catch (err) {
-            console.log(err);
-            return res.json({
-                error: "Something went wrong",
-                status: "error"
-            })
-        }
-
-    }
-}
-
-module.exports.mapdata = async function (req, res) {
-    try {
-        let data = [
-            {
-                "District": "Ahmedabad",
-                "id": "IN.GU.AB",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Amreli",
-                "id": "IN.GU.AM",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Anand",
-                "id": "IN.GU.AN",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Aravalli",
-                "id": "IN.GU.AR",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Banaskantha",
-                "id": "IN.GU.BK",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Bharuch",
-                "id": "IN.GU.BR",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Bhavnagar",
-                "id": "IN.GU.BN",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Botad",
-                "id": "IN.GU.BT",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Chhota Udepur",
-                "id": "IN.GU.CU",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Dahod",
-                "id": "IN.GU.DA",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Devbhoomi Dwarka",
-                "id": "IN.GU.DD",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Gandhinagar",
-                "id": "IN.GU.GA",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Gir Somnath",
-                "id": "IN.GU.GS",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Jamnagar",
-                "id": "IN.GU.JM",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Junagadh",
-                "id": "IN.GU.JG",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Kachchh",
-                "id": "IN.GU.KA",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Kheda",
-                "id": "IN.GU.KD",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Mehsana",
-                "id": "IN.GU.MA",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Mahisagar",
-                "id": "IN.GU.MS",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Morbi",
-                "id": "IN.GU.MB",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Narmada",
-                "id": "IN.GU.NR",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Navsari",
-                "id": "IN.GU.NV",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Panchmahal",
-                "id": "IN.GU.PC",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Patan",
-                "id": "IN.GU.PA",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Porbandar",
-                "id": "IN.GU.PO",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "pune",
-                "id": "IN.GU.RK",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Sabarkantha",
-                "id": "IN.GU.SB",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Surat",
-                "id": "IN.GU.SR",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Surendranagar",
-                "id": "IN.GU.SD",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Tapi",
-                "id": "IN.GU.TP",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Dangs (Ahwa)",
-                "id": "IN.GU.DG",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Vadodara",
-                "id": "IN.GU.VA",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            },
-            {
-                "District": "Valsad",
-                "id": "IN.GU.VL",
-                "value": 0,
-                "showlabel": 1,
-                "link": "newchart-json-SAM"
-            }
-        ]
-        if (req.params.Category != "All") {
-
-            for (let i = 0; i < data.length; i++) {
-                count = await farmer_info.count({ Category: req.params.Category, District: data[i].District });
-                data[i].value = count;
-            }
-            return res.json(data)
-        }
-        else {
-            for (let i = 0; i < data.length; i++) {
-                count = await farmer_info.count({ District: data[i].District });
-                data[i].value = count;
-            }
-            return res.json(data)
-        }
-    }
-    catch (err) {
-        console.log(err)
-        return res.json({
-            error: "Something went wrong",
-            status: "error"
-        })
-    }
-}
+module.exports.category = category;

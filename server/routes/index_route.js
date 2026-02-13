@@ -30,6 +30,9 @@ router.use('/insurance', require('./insurance_company/insurance_company'));
 // AI Chatbot Route
 router.use('/chatbot', require('./chatbot/chatbot_route'));
 
+// AS-4: Farmer Financial Support (Schemes, Insurance, Financial Aid)
+router.use('/financial', require('./financial/farmer_financial_route'));
+
 router.get('/', function (req, res) {
     return res.send('Hello');
 });
