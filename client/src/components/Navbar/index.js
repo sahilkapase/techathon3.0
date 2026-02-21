@@ -4,7 +4,7 @@ import "./Navbar.css";
 import Logo1 from "../../assets/logo.svg";
 import CardMedia from "@mui/material/CardMedia";
 import { BsBell, BsCircle, BsFillBellFill } from "react-icons/bs";
-import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
+import { FiMenu, FiX, FiChevronDown, FiLogOut, FiUser } from "react-icons/fi";
 import { AppContext } from "../AuthenticateFarmer/Farmer_account/appContext";
 import Modal from "react-bootstrap/Modal";
 import { Nav, NavDropdown } from "react-bootstrap";
@@ -19,6 +19,24 @@ export default function Navbar() {
   const [notifyCount, setnotifyCount] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // Get user info
+  const getUserInfo = () => {
+    if (auth2) {
+      const trader = JSON.parse(auth2);
+      return { name: trader.Name || 'Trader', type: 'Trader' };
+    }
+    if (auth) {
+      const user = JSON.parse(auth);
+      if (user.Username === 'admin' || user.Email === 'admin' || user.AdminName) {
+        return { name: user.AdminName || 'Admin', type: 'Admin' };
+      }
+      return { name: user.Name || 'Farmer', type: 'Farmer' };
+    }
+    return null;
+  };
+
+  const userInfo = getUserInfo();
 
   // Handle scroll effect
   useEffect(() => {
@@ -78,17 +96,24 @@ export default function Navbar() {
                   <span className="nav-icon">📄</span>
                   Generate Bill
                 </CustomLink>
-                <li>
+                <li className="user-profile-section">
+                  <div className="user-info">
+                    <FiUser className="user-avatar-icon" />
+                    <div className="user-details">
+                      <span className="user-name">{userInfo?.name}</span>
+                      <span className="user-type">{userInfo?.type}</span>
+                    </div>
+                  </div>
                   <button onClick={logout} className="logout-button">
-                    <span className="nav-icon">🚪</span>
-                    Logout
+                    <FiLogOut className="logout-icon" />
+                    <span>Logout</span>
                   </button>
                 </li>
               </ul>
             ) : (
               <>
                 {auth ? (
-                  JSON.parse(auth).Username === "admin" ? (
+                  (JSON.parse(auth).Username === "admin" || JSON.parse(auth).Email === "admin" || JSON.parse(auth).AdminName) ? (
                     // Admin Navigation
                     <ul className="nav-links">
                       <CustomLink to="/Dashboard" onClick={closeMobileMenu}>
@@ -119,10 +144,17 @@ export default function Navbar() {
                         <span className="nav-icon">📋</span>
                         Schemes
                       </CustomLink>
-                      <li>
+                      <li className="user-profile-section">
+                        <div className="user-info">
+                          <FiUser className="user-avatar-icon" />
+                          <div className="user-details">
+                            <span className="user-name">{userInfo?.name}</span>
+                            <span className="user-type">{userInfo?.type}</span>
+                          </div>
+                        </div>
                         <button onClick={logout} className="logout-button">
-                          <span className="nav-icon">🚪</span>
-                          Logout
+                          <FiLogOut className="logout-icon" />
+                          <span>Logout</span>
                         </button>
                       </li>
                     </ul>
@@ -148,6 +180,10 @@ export default function Navbar() {
                       <CustomLink to="/SchemesMain" onClick={closeMobileMenu}>
                         <span className="nav-icon">📋</span>
                         Schemes
+                      </CustomLink>
+                      <CustomLink to="/smart-assistant" onClick={closeMobileMenu}>
+                        <span className="nav-icon">🌾</span>
+                        Scheme Assistant
                       </CustomLink>
                       <li className="dropdown-wrapper">
                         <NavDropdown
@@ -181,10 +217,17 @@ export default function Navbar() {
                           </NavDropdown.Item>
                         </NavDropdown>
                       </li>
-                      <li>
+                      <li className="user-profile-section">
+                        <div className="user-info">
+                          <FiUser className="user-avatar-icon" />
+                          <div className="user-details">
+                            <span className="user-name">{userInfo?.name}</span>
+                            <span className="user-type">{userInfo?.type}</span>
+                          </div>
+                        </div>
                         <button onClick={logout} className="logout-button">
-                          <span className="nav-icon">🚪</span>
-                          Logout
+                          <FiLogOut className="logout-icon" />
+                          <span>Logout</span>
                         </button>
                       </li>
                     </ul>
@@ -192,6 +235,10 @@ export default function Navbar() {
                 ) : (
                   // Guest Navigation
                   <ul className="nav-links guest-links">
+                    <CustomLink to="/smart-assistant" onClick={closeMobileMenu}>
+                      <span className="nav-icon">🌾</span>
+                      Scheme Assistant
+                    </CustomLink>
                     <CustomLink to="/sign-up" onClick={closeMobileMenu}>
                       <span className="nav-icon">✍️</span>
                       Farmer Registration

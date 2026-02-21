@@ -37,7 +37,7 @@ export default class AdminLogin extends Component {
       .then((res) => res.json())
       .then((data) => {
         this.setState({ isLoading: false });
-        if (data._id || data.Id) {
+        if (data.id || data._id || data.Id) {
           localStorage.setItem("user", JSON.stringify(data));
           window.location.href = "./findfarmer";
         } else {

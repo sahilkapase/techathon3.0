@@ -105,29 +105,20 @@ module.exports.crop_history = async function (req, res) {
     const { UPIN } = req.params;
 
     if (!UPIN) {
-      return res.json({
-        status: "error",
-        error: "UPIN is required"
-      });
+      return res.json([]);
     }
 
     const history = await prisma.cropHistoryForm.findMany({
       where: { UPIN },
-      orderBy: { Year: 'desc' }
+      orderBy: { createdAt: 'desc' }
     });
 
-    return res.json({
-      status: "ok",
-      count: history.length,
-      history
-    });
+    // Return plain array (frontend expects array directly)
+    return res.json(history);
 
   } catch (err) {
-    console.log(err);
-    return res.json({
-      status: "error",
-      error: "Something went wrong"
-    });
+    console.log('crop_history error:', err);
+    return res.json([]);
   }
 };
 

@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // ==================== FARMER INFORMATION ====================
@@ -56,6 +55,7 @@ model FarmerInfo {
   loanApplications      LoanApplication[]
   subsidies             SubsidyRecord[]
   creditScore           CreditScore?
+  schemeApplications    SchemeApplication[]
 }
 
 // ==================== FARM INFORMATION ====================
@@ -90,6 +90,18 @@ model Farm {
 model CropHistoryForm {
   id                    Int       @id @default(autoincrement())
   farmerId              Int
+  Farmerid              String?
+  Farmername            String?
+  UPIN                  String?
+  Crop                  String?
+  Ratio                 Float?   @default(0)
+  Year                  Int?
+  Hectare               Float?   @default(0)
+  Are                   Float?   @default(0)
+  Square_meteres        Float?   @default(0)
+  District              String?
+  Taluka                String?
+  Village               String?
   Soil_type             String?
   Season                String?
   Sow_date              DateTime?
@@ -103,6 +115,7 @@ model CropHistoryForm {
   farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
   
   @@index([farmerId])
+  @@index([UPIN])
 }
 
 // ==================== IRRIGATION ====================
@@ -181,6 +194,10 @@ model SchemeDetails {
   DocumentsRequired     String[]  @default([])
   SectorFocus           String?
   Region                String[]  @default([])
+  EligibilityCriteria   String?
+  LaunchDate            DateTime?
+  Farmertype            String?
+  Category              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 }
@@ -309,10 +326,14 @@ model Message {
 model Notification {
   id                    Int       @id @default(autoincrement())
   farmerId              Int
+  schemeId              String?
   title                 String?
   message               String?
   notificationType      String    @default("info")
   status                String    @default("unread")
+  applicationStatus     String    @default("pending")
+  appliedDate           DateTime  @default(now())
+  responseDate          DateTime?
   scheduleDate          DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
@@ -321,6 +342,7 @@ model Notification {
   farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
   
   @@index([farmerId])
+  @@index([schemeId])
   @@index([scheduleDate])
 }
 
@@ -499,4 +521,155 @@ model User {
   name                  String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+}
+
+// ==================== GOVERNMENT SCHEMES (Comprehensive) ====================
+model GovernmentScheme {
+  id                    Int       @id @default(autoincrement())
+  schemeCode            String    @unique
+  schemeName            String
+  schemeNameHi          String?
+  schemeNameMr          String?
+  description           String
+  descriptionHi         String?
+  descriptionMr         String?
+  category              String    // "subsidy", "insurance", "loan", "pension", "direct_benefit"
+  ministry              String?
+  benefitAmount         String?
+  benefitType           String?   // "cash", "subsidy", "insurance_coverage", "loan_waiver"
+  eligibilityCriteria   Json?     // JSON with rules: { minLand, maxLand, crops, states, farmerTypes, categories, maxIncome }
+  cropTypes             String[]  @default([])
+  applicableStates      String[]  @default([])
+  applicableDistricts   String[]  @default([])
+  minLandSize           Float?
+  maxLandSize           Float?
+  farmerTypes           String[]  @default([])  // "small", "marginal", "medium", "large"
+  farmerCategories      String[]  @default([])  // "SC", "ST", "OBC", "General"
+  season                String[]  @default([])
+  documentsRequired     String[]  @default([])
+  documentsRequiredHi   String[]  @default([])
+  documentsRequiredMr   String[]  @default([])
+  applicationProcess    String?
+  applicationProcessHi  String?
+  applicationProcessMr  String?
+  applicationDeadline   DateTime?
+  websiteUrl            String?
+  helplineNumber        String?
+  status                String    @default("Active")
+  priority              Int       @default(0)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  applications          SchemeApplication[]
+
+  @@index([category])
+  @@index([status])
+}
+
+// ==================== SCHEME APPLICATIONS (Tracking) ====================
+model SchemeApplication {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  schemeId              Int
+  applicationNumber     String    @unique
+  status                String    @default("Draft") // Draft, Submitted, Under_Review, Approved, Rejected, Disbursed
+  statusHistory         Json[]    @default([])      // Array of { status, date, remarks }
+  formData              Json?                       // Auto-filled form data
+  documentsUploaded     String[]  @default([])
+  documentsChecklist    Json[]    @default([])      // { document, required, uploaded, verified }
+  remarks               String?
+  approvedAmount        Float?
+  disbursedAmount       Float?
+  approvedDate          DateTime?
+  disbursedDate         DateTime?
+  rejectionReason       String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  farmer                FarmerInfo @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  scheme                GovernmentScheme @relation(fields: [schemeId], references: [id], onDelete: Cascade)
+
+  @@index([farmerId])
+  @@index([schemeId])
+  @@index([status])
+}
+
+// ==================== INSURANCE PRODUCTS ====================
+model InsuranceProduct {
+  id                    Int       @id @default(autoincrement())
+  productCode           String    @unique
+  productName           String
+  productNameHi         String?
+  productNameMr         String?
+  description           String?
+  descriptionHi         String?
+  descriptionMr         String?
+  insuranceType         String    // "crop", "weather", "livestock", "health", "life"
+  provider              String?
+  premiumRate           Float?    // percentage of sum insured
+  sumInsured            Float?
+  coverageDetails       String?
+  coverageDetailsHi     String?
+  coverageDetailsMr     String?
+  applicableCrops       String[]  @default([])
+  applicableStates      String[]  @default([])
+  season                String[]  @default([])
+  subsidyPercentage     Float?    // government subsidy on premium
+  claimProcess          String?
+  claimProcessHi        String?
+  claimProcessMr        String?
+  documentsRequired     String[]  @default([])
+  enrollmentDeadline    DateTime?
+  status                String    @default("Active")
+  riskLevel             String?   // "low", "medium", "high"
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([insuranceType])
+  @@index([status])
+}
+
+// ==================== WEATHER RISK ALERTS ====================
+model WeatherRiskAlert {
+  id                    Int       @id @default(autoincrement())
+  district              String
+  state                 String    @default("Maharashtra")
+  riskType              String    // "drought", "flood", "hailstorm", "pest", "frost"
+  riskLevel             String    // "low", "medium", "high", "critical"
+  description           String?
+  descriptionHi         String?
+  descriptionMr         String?
+  affectedCrops         String[]  @default([])
+  recommendedActions    String[]  @default([])
+  recommendedActionsHi  String[]  @default([])
+  recommendedActionsMr  String[]  @default([])
+  insuranceSuggestion   String?
+  validFrom             DateTime  @default(now())
+  validUntil            DateTime?
+  isActive              Boolean   @default(true)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([district])
+  @@index([isActive])
+}
+
+// ==================== FARMER SCHEME REMINDERS ====================
+model SchemeReminder {
+  id                    Int       @id @default(autoincrement())
+  farmerId              Int
+  schemeId              Int?
+  reminderType          String    // "deadline", "document", "status_update", "new_scheme"
+  reminderDate          DateTime
+  message               String?
+  messageHi             String?
+  messageMr             String?
+  channel               String    @default("in_app") // "sms", "whatsapp", "in_app"
+  status                String    @default("pending") // "pending", "sent", "failed"
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([farmerId])
+  @@index([reminderDate])
+  @@index([status])
 }

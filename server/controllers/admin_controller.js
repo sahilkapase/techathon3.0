@@ -284,9 +284,22 @@ module.exports.registeredfarmerdetails = async function (req, res) {
       }
     });
 
+    // Count farmers by category
+    const SCfarmers = farmers.filter(f => f.Category === 'SC').length;
+    const STfarmers = farmers.filter(f => f.Category === 'ST').length;
+    const OBCfarmers = farmers.filter(f => f.Category === 'OBC').length;
+    const EWSfarmers = farmers.filter(f => f.Category === 'EWS').length;
+    const GENERALfarmers = farmers.filter(f => f.Category === 'GENERAL' || !f.Category).length;
+
     return res.json({
       status: "ok",
       count: farmers.length,
+      registeredfarmers: farmers.length,
+      SCfarmers,
+      STfarmers,
+      OBCfarmers,
+      EWSfarmers,
+      GENERALfarmers,
       farmers
     });
 
@@ -557,3 +570,80 @@ module.exports.createAdmin = async function (req, res) {
 };
 
 module.exports.category = category;
+
+// Stub functions for map/analysis routes
+module.exports.districtwise = async function (req, res) {
+  res.json({ status: 'success', data: [] });
+};
+module.exports.talukawise = async function (req, res) {
+  res.json({ status: 'success', data: [] });
+};
+module.exports.villagewise = async function (req, res) {
+  res.json({ status: 'success', data: [] });
+};
+module.exports.mapdata = async function (req, res) {
+  try {
+    const { Category } = req.params;
+    
+    // Get farmers grouped by district
+    const farmers = await prisma.farmerInfo.findMany({
+      where: Category && Category !== 'undefined' ? { Category } : {},
+      select: {
+        District: true,
+        Category: true
+      }
+    });
+
+    // Group by district and count
+    const districtCounts = {};
+    farmers.forEach(f => {
+      const dist = f.District || 'Unknown';
+      districtCounts[dist] = (districtCounts[dist] || 0) + 1;
+    });
+
+    const data = Object.entries(districtCounts).map(([district, count]) => ({
+      id: district,
+      label: district,
+      value: count
+    }));
+
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    res.json([]);
+  }
+};
+module.exports.analysis = async function (req, res) {
+  try {
+    const { District, Taluka, Village } = req.params;
+    
+    // Build where clause based on params
+    const where = {};
+    if (District && District !== '0' && District !== 'undefined') {
+      where.District = District;
+    }
+    if (Taluka && Taluka !== '0' && Taluka !== 'undefined') {
+      where.Taluka = Taluka;
+    }
+    if (Village && Village !== '0' && Village !== 'undefined') {
+      where.Village = Village;
+    }
+
+    const farmers = await prisma.farmerInfo.findMany({ where });
+
+    // Count by category
+    const SC = farmers.filter(f => f.Category === 'SC').length;
+    const ST = farmers.filter(f => f.Category === 'ST').length;
+    const OBC = farmers.filter(f => f.Category === 'OBC').length;
+    const EWS = farmers.filter(f => f.Category === 'EWS').length;
+    const GENERAL = farmers.filter(f => f.Category === 'GENERAL' || !f.Category).length;
+
+    res.json({ 
+      status: 'success', 
+      data: [{ SC, ST, OBC, EWS, GENERAL }] 
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 'success', data: [{ SC: 0, ST: 0, OBC: 0, EWS: 0, GENERAL: 0 }] });
+  }
+};

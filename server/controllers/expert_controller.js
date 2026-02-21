@@ -8,13 +8,17 @@ const { prisma } = require('../config/prisma');
 // ==================== EXPERT REGISTRATION ====================
 module.exports.registration = async function (req, res) {
   try {
-    const { Email, Name, Password, Mobilenumber, Qualifications, Expertise, Bio, District, State } = req.body;
+    // Accept both Mobile_no (frontend) and Mobilenumber, Contact for flexibility
+    const { Email, Name, Password, Mobile_no, Mobilenumber, Contact, Qualification, Qualifications, Expertise, Specialization, Category, District } = req.body;
+    
+    // Use whichever mobile field was provided
+    const mobileNum = Mobile_no || Mobilenumber || Contact;
 
     // Validation
-    if (!Email || !Name || !Password || !Mobilenumber) {
+    if (!Email || !Name || !Password || !mobileNum) {
       return res.status(400).json({
         status: "error",
-        error: "Missing required fields: Email, Name, Password, Mobilenumber"
+        error: "Missing required fields: Email, Name, Password, Mobile Number"
       });
     }
 
@@ -36,7 +40,7 @@ module.exports.registration = async function (req, res) {
     }
 
     // Validate phone number
-    if (!/^\d{10}$/.test(String(Mobilenumber).replace(/\D/g, ''))) {
+    if (!/^\d{10}$/.test(String(mobileNum).replace(/\D/g, ''))) {
       return res.status(400).json({
         status: "error",
         error: "Invalid mobile number format"
@@ -57,7 +61,7 @@ module.exports.registration = async function (req, res) {
 
     // Check if mobile number is already used
     const mobileExists = await prisma.expertsRegistration.findFirst({
-      where: { Mobilenumber: Mobilenumber.toString() }
+      where: { Contact: BigInt(mobileNum) }
     });
 
     if (mobileExists) {
@@ -67,23 +71,30 @@ module.exports.registration = async function (req, res) {
       });
     }
 
-    // Create new expert
+    // Generate unique Expert ID
+    const uniqueId = require('generate-unique-id');
+    const expertId = 'EXP' + uniqueId({ length: 8, useLetters: false });
+
+    // Create new expert (match schema fields)
     const newExpert = await prisma.expertsRegistration.create({
       data: {
+        ExpertId: expertId,
         Email,
         Name: Name.trim(),
         Password, // TODO: Hash password using bcrypt in production
-        Mobilenumber: Mobilenumber.toString(),
-        Qualifications: Qualifications || "",
-        Expertise: Expertise || "",
-        Bio: Bio || "",
-        District: District || "",
-        State: State || "",
-        Status: "active"
+        Contact: BigInt(mobileNum),
+        Qualification: Qualification || Qualifications || null,
+        Specialization: Specialization || Expertise || null,
+        Category: Category || null,
+        District: District || null
       }
     });
 
     const { Password: _, ...expertObj } = newExpert;
+    // Convert BigInt to string for JSON serialization
+    if (expertObj.Contact) {
+      expertObj.Contact = expertObj.Contact.toString();
+    }
     return res.status(201).json({
       status: "ok",
       message: "Expert registration successful!",

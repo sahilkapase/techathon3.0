@@ -39,6 +39,7 @@ import Genratebill from "./components/Authentication/Genratebill";
 import Apmc from "./components/Admin/APMC/Apmc";
 import EnhancedSchemes from "./components/AuthenticateFarmer/Farmer_schemes/EnhancedSchemes";
 import AIChatbot from "./components/AIChatbot/AIChatbot";
+import SmartAssistant from "./components/SmartAssistant/SmartAssistant";
 
 
 function App() {
@@ -86,6 +87,7 @@ function App() {
                 <Route exact path="/Genratebill" element={<Genratebill />} />
                 <Route exact path="/Apmc" element={<Apmc />} />
                 <Route exact path="/chatbot" element={<AIChatbot />} />
+                <Route exact path="/smart-assistant" element={<SmartAssistant />} />
               </Routes>
             </div>
           </div>

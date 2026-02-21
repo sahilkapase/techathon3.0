@@ -33,6 +33,9 @@ router.use('/chatbot', require('./chatbot/chatbot_route'));
 // AS-4: Farmer Financial Support (Schemes, Insurance, Financial Aid)
 router.use('/financial', require('./financial/farmer_financial_route'));
 
+// Smart Farmer Scheme Assistant
+router.use('/smart-assistant', require('./smart_assistant/smart_assistant_route'));
+
 router.get('/', function (req, res) {
     return res.send('Hello');
 });

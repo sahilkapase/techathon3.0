@@ -4,7 +4,7 @@
       "name": "models/gemini-2.5-flash",
       "version": "001",
       "displayName": "Gemini 2.5 Flash",
-      "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2025.",
+      "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2026.",
       "inputTokenLimit": 1048576,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -23,7 +23,7 @@
       "name": "models/gemini-2.5-pro",
       "version": "2.5",
       "displayName": "Gemini 2.5 Pro",
-      "description": "Stable release (June 17th, 2025) of Gemini 2.5 Pro",
+      "description": "Stable release (June 17th, 2026) of Gemini 2.5 Pro",
       "inputTokenLimit": 1048576,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -60,7 +60,7 @@
       "name": "models/gemini-2.0-flash-001",
       "version": "2.0",
       "displayName": "Gemini 2.0 Flash 001",
-      "description": "Stable version of Gemini 2.0 Flash, our fast and versatile multimodal model for scaling across diverse tasks, released in January of 2025.",
+      "description": "Stable version of Gemini 2.0 Flash, our fast and versatile multimodal model for scaling across diverse tasks, released in January of 2026.",
       "inputTokenLimit": 1048576,
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
@@ -131,7 +131,7 @@
       "name": "models/gemini-exp-1206",
       "version": "2.5-exp-03-25",
       "displayName": "Gemini Experimental 1206",
-      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
+      "description": "Experimental release (March 25th, 2026) of Gemini 2.5 Pro",
       "inputTokenLimit": 1048576,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -148,7 +148,7 @@
     },
     {
       "name": "models/gemini-2.5-flash-preview-tts",
-      "version": "gemini-2.5-flash-exp-tts-2025-05-19",
+      "version": "gemini-2.5-flash-exp-tts-2026-05-19",
       "displayName": "Gemini 2.5 Flash Preview TTS",
       "description": "Gemini 2.5 Flash Preview TTS",
       "inputTokenLimit": 8192,
@@ -164,7 +164,7 @@
     },
     {
       "name": "models/gemini-2.5-pro-preview-tts",
-      "version": "gemini-2.5-pro-preview-tts-2025-05-19",
+      "version": "gemini-2.5-pro-preview-tts-2026-05-19",
       "displayName": "Gemini 2.5 Pro Preview TTS",
       "description": "Gemini 2.5 Pro Preview TTS",
       "inputTokenLimit": 8192,
@@ -324,7 +324,7 @@
       "name": "models/gemini-2.5-flash-lite",
       "version": "001",
       "displayName": "Gemini 2.5 Flash-Lite",
-      "description": "Stable version of Gemini 2.5 Flash-Lite, released in July of 2025",
+      "description": "Stable version of Gemini 2.5 Flash-Lite, released in July of 2026",
       "inputTokenLimit": 1048576,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -357,10 +357,10 @@
       "maxTemperature": 1
     },
     {
-      "name": "models/gemini-2.5-flash-preview-09-2025",
-      "version": "Gemini 2.5 Flash Preview 09-2025",
-      "displayName": "Gemini 2.5 Flash Preview Sep 2025",
-      "description": "Gemini 2.5 Flash Preview Sep 2025",
+      "name": "models/gemini-2.5-flash-preview-09-2026",
+      "version": "Gemini 2.5 Flash Preview 09-2026",
+      "displayName": "Gemini 2.5 Flash Preview Sep 2026",
+      "description": "Gemini 2.5 Flash Preview Sep 2026",
       "inputTokenLimit": 1048576,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -376,10 +376,10 @@
       "thinking": true
     },
     {
-      "name": "models/gemini-2.5-flash-lite-preview-09-2025",
+      "name": "models/gemini-2.5-flash-lite-preview-09-2026",
       "version": "2.5-preview-09-25",
-      "displayName": "Gemini 2.5 Flash-Lite Preview Sep 2025",
-      "description": "Preview release (Septempber 25th, 2025) of Gemini 2.5 Flash-Lite",
+      "displayName": "Gemini 2.5 Flash-Lite Preview Sep 2026",
+      "description": "Preview release (Septempber 25th, 2026) of Gemini 2.5 Flash-Lite",
       "inputTokenLimit": 1048576,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -396,7 +396,7 @@
     },
     {
       "name": "models/gemini-3-pro-preview",
-      "version": "3-pro-preview-11-2025",
+      "version": "3-pro-preview-11-2026",
       "displayName": "Gemini 3 Pro Preview",
       "description": "Gemini 3 Pro Preview",
       "inputTokenLimit": 1048576,
@@ -415,7 +415,7 @@
     },
     {
       "name": "models/gemini-3-flash-preview",
-      "version": "3-flash-preview-12-2025",
+      "version": "3-flash-preview-12-2026",
       "displayName": "Gemini 3 Flash Preview",
       "description": "Gemini 3 Flash Preview",
       "inputTokenLimit": 1048576,
@@ -486,10 +486,10 @@
       "thinking": true
     },
     {
-      "name": "models/gemini-2.5-computer-use-preview-10-2025",
-      "version": "Gemini 2.5 Computer Use Preview 10-2025",
-      "displayName": "Gemini 2.5 Computer Use Preview 10-2025",
-      "description": "Gemini 2.5 Computer Use Preview 10-2025",
+      "name": "models/gemini-2.5-computer-use-preview-10-2026",
+      "version": "Gemini 2.5 Computer Use Preview 10-2026",
+      "displayName": "Gemini 2.5 Computer Use Preview 10-2026",
+      "description": "Gemini 2.5 Computer Use Preview 10-2026",
       "inputTokenLimit": 131072,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -503,10 +503,10 @@
       "thinking": true
     },
     {
-      "name": "models/deep-research-pro-preview-12-2025",
+      "name": "models/deep-research-pro-preview-12-2026",
       "version": "deepthink-exp-05-20",
-      "displayName": "Deep Research Pro Preview (Dec-12-2025)",
-      "description": "Preview release (December 12th, 2025) of Deep Research Pro",
+      "displayName": "Deep Research Pro Preview (Dec-12-2026)",
+      "description": "Preview release (December 12th, 2026) of Deep Research Pro",
       "inputTokenLimit": 131072,
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
@@ -697,10 +697,10 @@
       "thinking": true
     },
     {
-      "name": "models/gemini-2.5-flash-native-audio-preview-09-2025",
-      "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19",
-      "displayName": "Gemini 2.5 Flash Native Audio Preview 09-2025",
-      "description": "Gemini 2.5 Flash Native Audio Preview 09-2025",
+      "name": "models/gemini-2.5-flash-native-audio-preview-09-2026",
+      "version": "gemini-2.5-flash-preview-native-audio-dialog-2026-05-19",
+      "displayName": "Gemini 2.5 Flash Native Audio Preview 09-2026",
+      "description": "Gemini 2.5 Flash Native Audio Preview 09-2026",
       "inputTokenLimit": 131072,
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
@@ -714,10 +714,10 @@
       "thinking": true
     },
     {
-      "name": "models/gemini-2.5-flash-native-audio-preview-12-2025",
-      "version": "12-2025",
-      "displayName": "Gemini 2.5 Flash Native Audio Preview 12-2025",
-      "description": "Gemini 2.5 Flash Native Audio Preview 12-2025",
+      "name": "models/gemini-2.5-flash-native-audio-preview-12-2026",
+      "version": "12-2026",
+      "displayName": "Gemini 2.5 Flash Native Audio Preview 12-2026",
+      "description": "Gemini 2.5 Flash Native Audio Preview 12-2026",
       "inputTokenLimit": 131072,
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [

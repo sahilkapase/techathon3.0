@@ -1,9 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const port = process.env.PORT || 8000;
-const socketport = process.env.PORT || 7000;
+const socketport = process.env.SOCKET_PORT || 7000;
 const cookieparser = require('cookie-parser');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+
+// Fix BigInt JSON serialization (needed for Prisma BigInt fields like Mobilenum, Adharnum, Accountnum)
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 const app = express();
 const path = require('path');

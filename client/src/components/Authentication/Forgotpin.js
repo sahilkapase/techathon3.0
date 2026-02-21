@@ -1,317 +1,306 @@
-import React, { Component } from "react";
-import { sha256} from 'js-sha256'
-import app2 from "./firebase_config"
-import { getAuth, RecaptchaVerifier , signInWithPhoneNumber } from "firebase/auth";
-import "./Forgotpin.css"
-const auth = getAuth(app2);
+import React, { useState, useEffect } from "react";
+import { sha256 } from "js-sha256";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import "./Forgotpin.css";
 
-
-export default class Login extends Component {
+const ForgotPassword = () => {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1); // 1: Mobile, 2: OTP, 3: New Password
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   
-  constructor(props) {
-    super(props);
-    this.state = {
-      Mobilenum: "",
-      Password: "",
-      confirmnewpass : "",
-      otp : "",
-      newpassbtn : true,
-      confirmnewpassbtn : true,
-      alertbox : false, //otp sended
-      verified: false,
-      verifyButton: false,
-      verifyOtp: false,
-      loginerroralert: false, //from database
-      alertbox2 : false, //Enter 10 digit Number
-      alertbox3 : false, //Passwords are Not match
-      alertbox4 : false, //Passwords Not Strong
+  const [mobilenum, setMobilenum] = useState("");
+  const [otp, setOtp] = useState("");
+  const [testOtp, setTestOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpTimer, setOtpTimer] = useState(0);
 
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.onSignInSubmit = this.onSignInSubmit.bind(this);
-    this.verifyCode2 = this.verifyCode2.bind(this);
-  }
-  
+  // TEST MODE
+  const TEST_MODE = true;
 
-  changeMobile(e){
-    this.setState({Mobilenum : e.target.value}, function(){
-     if (this.state.Mobilenum.length === 10){
-  this.setState({
-    verifyButton: true,
-    alertbox2 : false,
-  }
-  ); 
-}else if (this.state.Mobilenum.length < 10 || this.state.Mobilenum.length > 10){
-  this.setState({
-      verifyButton: false,
-      alertbox2 : true,
-    })
-}
-    });
-  }
-
-  Password(e){
-    this.setState({Password : e.target.value}, function(){
-      const Password =sha256(this.state.Password);
-      console.log(Password)
-     if (this.state.Password.match(`^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$`)){
-  this.setState({
-    alertbox4 : false,
-  }); 
-}else{
-  this.setState({
-    alertbox4 : true,
-  })
-}
-    });
-  }
-
-  onCaptchaVerify(){  
-    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-      'size': 'invisible',
-      'callback': (response) => {
-       this.onSignInSubmit();
-      },
-      'expired-callback': () => {
-        // Response expired. Ask user to solve reCAPTCHA again.
-        // ...
-      }
-    }, auth);
-      }
-    
-      onSignInSubmit(){
-    this.onCaptchaVerify();
-        const phoneNumber = "+91" + this.state.Mobilenum;
-    const appVerifier = window.recaptchaVerifier;
-        signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-        .then((confirmationResult) => {
-          // SMS sent. Prompt user to type the code from the message, then sign the
-          // user in with confirmationResult.confirm(code).
-          window.confirmationResult = confirmationResult;
-          this.setState({
-            alertbox : true  //Otp sended
-          })
-          this.setState({verifyOtp : true});
-          // ...
-        }).catch((error) => {
-          // Error; SMS not sent
-          // ...
-        });
-      }
-
-      verifyCode2(){
-        window.confirmationResult
-        .confirm(this.state.otp)
-        .then((result) => {
-          // User signed in successfully.
-          const user = result.user;
-          console.log(user);
-          this.setState({
-            verified:true,
-            verifyOtp:false,
-            alertbox : false, 
-            newpassbtn : true,
-            confirmnewpassbtn : true,
-          })
-          // ...
-        }).catch((error) => {
-          alert("Invalid Otp")
-        });
-      }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    
-
-    if(this.state.Password === this.state.confirmnewpass){
-
-        if(this.state.Password ===""){
-            const Password = this.state.Password;
-            const { Mobilenum  } = this.state;
-            console.log(Mobilenum,Password);
-            fetch("http://localhost:8000/farmer/forgotpassword", {
-              method: "POST",
-              crossDomain: true,
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*",
-              },
-              body: JSON.stringify({
-                Mobilenum,
-               Password,
-              }),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                if (data.Id) {
-                  console.log(data)
-                  console.log(Password , "pin")
-                  localStorage.setItem("user", JSON.stringify(data));
-                  window.location.href = "./Myaccount";
-                }
-                else{
-                  // alert(data)
-                  console.log(data , "else")
-                  console.log(Password , "pin")
-                  console.log(data.error ,"hahahaha")
-                  const loginerroralert = data.error
-                  this.setState({
-                    loginerroralert
-                  })
-                  
-                }
-              });
-          }else{
-            const Password =sha256(this.state.Password);
-            const { Mobilenum  } = this.state;
-            console.log(Mobilenum,Password);
-            fetch("http://localhost:8000/farmer/forgotpassword", {
-              method: "POST",
-              crossDomain: true,
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*",
-              },
-              body: JSON.stringify({
-                Mobilenum,
-               Password,
-              }),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                if (data.status == "ok") {
-                  console.log(data)
-                  console.log(Password , "pin")
-                  alert("New password Updated")
-                  window.location.href = "./sign-in";
-                }
-                else{
-                  // alert(data)
-                  console.log(data , "else")
-                  console.log(Password , "pin")
-                  console.log(data.error ,"hahahaha")
-                  const loginerroralert = data.error
-                  this.setState({
-                    loginerroralert
-                  })
-                  
-                }
-              });
-          }
-    }else{
-        this.setState({
-            alertbox3 : true  ,//Passwords are Not match
-            loginerroralert : false
-          })
+  // OTP Timer
+  useEffect(() => {
+    let interval;
+    if (otpTimer > 0) {
+      interval = setInterval(() => {
+        setOtpTimer(prev => prev - 1);
+      }, 1000);
     }
-   
-  }
-  render() {
-    return (
-      <div className="auth-wrapper_forgotpin">
-      <div className="auth-inner_forgotpin">
-      <form id="forgotpin_form"onSubmit={this.handleSubmit}>
-        <div id="recaptcha-container"></div>
-        <h2 id="forgotpin_h2">Forgot Pasword</h2>
+    return () => clearInterval(interval);
+  }, [otpTimer]);
+
+  // Send OTP
+  const sendOTP = async () => {
+    if (!mobilenum || mobilenum.length !== 10) {
+      setError("Please enter a valid 10-digit mobile number");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      // First check if mobile exists in database
+      const checkResponse = await axios.get(
+        `http://localhost:8000/farmer/mobilenumverify/${mobilenum}`
+      );
+
+      if (TEST_MODE) {
+        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        setTestOtp(generatedOtp);
         
-        <div className="mb-3">
-          <label>Mobile Number</label>
-          <input
-            // type="email"
-            className="form-control"
-            id="forgotpin_data"
-            placeholder="Enter your mobilenumber"
-            onChange={(e) => this.changeMobile(e)}
-          />
+        console.log("=".repeat(50));
+        console.log(" FORGOT PASSWORD - OTP Generated");
+        console.log(` Mobile: +91${mobilenum}`);
+        console.log(` OTP: ${generatedOtp}`);
+        console.log("=".repeat(50));
+        
+        // Log to backend terminal
+        try {
+          await axios.post("http://localhost:8000/farmer/test-otp", {
+            mobile: mobilenum,
+            otp: generatedOtp
+          });
+        } catch (e) {
+          console.log("Backend logging available in server terminal");
+        }
+        
+        setStep(2);
+        setOtpTimer(60);
+        setSuccess("OTP sent! Check server terminal for OTP.");
+        setTimeout(() => setSuccess(""), 5000);
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      setError("Mobile number not registered or server error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Verify OTP
+  const verifyOTP = () => {
+    if (!otp || otp.length !== 6) {
+      setError("Please enter a valid 6-digit OTP");
+      return;
+    }
 
-{this.state.verifyButton? <input 
-type="button"   
-value={this.state.verified ? "Verified" : "verify"}
-onClick={this.onSignInSubmit}
-style={
-  {
-    backgroundColor:"#0163d2",
-    width:"100%"
-  }
-}
-/> :null}
-{this.state.alertbox  ? <p style={{color : "green"}}>otp sended to your Mobile Number</p> : null}
-{this.state.alertbox2 ? <p style={{color : "red"}}>Enter 10 digit Number</p> : null}
+    if (TEST_MODE) {
+      if (otp === testOtp) {
+        setStep(3);
+        setSuccess("OTP verified! Set your new password.");
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        setError("Invalid OTP. Please try again.");
+      }
+    }
+  };
+
+  // Reset Password
+  const resetPassword = async () => {
+    if (!newPassword || newPassword.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const hashedPassword = sha256(newPassword);
+      
+      const response = await axios.post(
+        "http://localhost:8000/farmer/forgotpassword",
+        {
+          Mobilenum: mobilenum,
+          Password: hashedPassword
+        }
+      );
+
+      if (response.data.status === "ok") {
+        setSuccess("Password reset successful! Redirecting to login...");
+        setTimeout(() => navigate("/sign-in"), 2000);
+      } else {
+        setError(response.data.error || "Failed to reset password");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      setError("Failed to reset password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="forgot-wrapper">
+      <div className="forgot-container">
+        {/* Header */}
+        <div className="forgot-header">
+          <div className="header-icon"></div>
+          <h1>Reset Password</h1>
+          <p>Recover access to your account</p>
         </div>
 
-        {this.state.verifyOtp ?
-<div className="mb-3">
-   <label>Otp</label>
-  <input
-  // type="number"
-  className="form-control"
-  placeholder="Enter the Otp"
-  onChange={(e) => this.setState({otp:e.target.value})}
-  />
-<input 
-type="button"
-value="Verify Otp"
-// onClick={this.verifyCode}
-onClick={this.verifyCode2}
-style={
-  {
-    backgroundColor:"#0163d2",
-    width:"100%"
-  }
-}
-/> 
-</div> : null}
-
-
-        {this.state.newpassbtn ?
-<div className="mb-3">
-   <label>Create New Password</label>
-  <input
-  // type="number"
-  className="form-control"
-  id="forgotpin_data"
-  placeholder="Enter New Password"
-  onChange={(e) => this.Password(e)}
-  />
-  {this.state.alertbox4 ? <p style={{color : "red"}}>Password is Not Strong</p> : null}
-</div> : null}
-
-{this.state.confirmnewpassbtn ?
-<div className="mb-3">
-   <label>Confirm New Password</label>
-  <input
-  // type="number"
-  className="form-control"
-  id="forgotpin_data"
-  placeholder="Enter New Password"
-  onChange={(e) => this.setState({confirmnewpass: e.target.value})}
-  />
-  {this.state.alertbox3 ? <p style={{color : "red"}}>Passwords are Not match</p> : null}
-</div> : null}
-
-
-<p style={{color : "red" , marginTop : "3px"}}>{this.state.loginerroralert}</p> 
-        <div className="d-grid">
-          <button type="submit" id="forgotpin_btn" className="btn btn-primary" >
-            Submit
-          </button>
+        {/* Progress */}
+        <div className="forgot-progress">
+          <div className={`progress-dot ${step >= 1 ? "active" : ""}`}>
+            <span>1</span>
+            <p>Mobile</p>
+          </div>
+          <div className={`progress-line ${step >= 2 ? "active" : ""}`}></div>
+          <div className={`progress-dot ${step >= 2 ? "active" : ""}`}>
+            <span>2</span>
+            <p>Verify</p>
+          </div>
+          <div className={`progress-line ${step >= 3 ? "active" : ""}`}></div>
+          <div className={`progress-dot ${step >= 3 ? "active" : ""}`}>
+            <span>3</span>
+            <p>Reset</p>
+          </div>
         </div>
 
-       
+        {/* Messages */}
+        {error && <div className="alert alert-error">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
 
-        <p className="forgot-password text-right">
-          <a id="forgotpin_pageflow"href="/sign-up">Farmer Sign Up</a>
-        </p>
-      </form>
+        <div className="forgot-form">
+          {/* Step 1: Mobile Number */}
+          {step === 1 && (
+            <div className="form-step fade-in">
+              <h2> Enter Mobile Number</h2>
+              <p className="step-desc">Enter your registered mobile number to receive OTP</p>
+              
+              <div className="form-group">
+                <label>Mobile Number</label>
+                <div className="mobile-group">
+                  <span className="country-code">+91</span>
+                  <input
+                    type="tel"
+                    value={mobilenum}
+                    onChange={(e) => {
+                      setMobilenum(e.target.value.replace(/\D/g, "").slice(0, 10));
+                      setError("");
+                    }}
+                    placeholder="Enter 10-digit mobile"
+                    maxLength={10}
+                    className="form-input"
+                  />
+                </div>
+              </div>
 
-      <div id="forgotpin_rightside">
-          <img id="forgotpin_rightimg" src="./imgs/forgetpin.png" alt="expert_signupimg"></img>
-        </div> 
+              <button
+                onClick={sendOTP}
+                disabled={loading || mobilenum.length !== 10}
+                className="btn-primary"
+              >
+                {loading ? "Sending..." : "Send OTP"}
+              </button>
+            </div>
+          )}
+
+          {/* Step 2: OTP Verification */}
+          {step === 2 && (
+            <div className="form-step fade-in">
+              <h2> Enter OTP</h2>
+              <p className="step-desc">Enter the 6-digit code sent to +91{mobilenum}</p>
+              
+              <div className="form-group">
+                <label>OTP Code</label>
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => {
+                    setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+                    setError("");
+                  }}
+                  placeholder="Enter 6-digit OTP"
+                  maxLength={6}
+                  className="form-input otp-input"
+                />
+                {otpTimer > 0 && (
+                  <p className="timer">Resend OTP in {otpTimer}s</p>
+                )}
+                {otpTimer === 0 && (
+                  <button onClick={sendOTP} className="resend-btn">
+                    Resend OTP
+                  </button>
+                )}
+              </div>
+
+              <div className="btn-group">
+                <button onClick={() => setStep(1)} className="btn-secondary">
+                   Back
+                </button>
+                <button
+                  onClick={verifyOTP}
+                  disabled={otp.length !== 6}
+                  className="btn-primary"
+                >
+                  Verify OTP
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: New Password */}
+          {step === 3 && (
+            <div className="form-step fade-in">
+              <h2> Set New Password</h2>
+              <p className="step-desc">Create a strong password for your account</p>
+              
+              <div className="form-group">
+                <label>New Password</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Min 6 characters"
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Re-enter password"
+                  className="form-input"
+                />
+              </div>
+
+              <button
+                onClick={resetPassword}
+                disabled={loading}
+                className="btn-primary"
+              >
+                {loading ? "Resetting..." : " Reset Password"}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="forgot-footer">
+          <p>Remember your password? <Link to="/sign-in" className="login-link">Login here</Link></p>
+        </div>
       </div>
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default ForgotPassword;

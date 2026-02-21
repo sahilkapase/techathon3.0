@@ -45,28 +45,24 @@ module.exports.farminfo = async function (req, res) {
     const { Adharnum } = req.params;
 
     if (!Adharnum) {
-      return res.json({
-        status: "error",
-        error: "Aadhaar number is required"
+      return res.json([]);
+    }
+
+    // Get farmer with matching aadhaar - look up directly on FarmerInfo.Adharnum
+    let farmer = null;
+    try {
+      farmer = await prisma.farmerInfo.findFirst({
+        where: { Adharnum: BigInt(Adharnum) }
+      });
+    } catch (e) {
+      // If BigInt conversion fails, try string-based lookup via Farmerid
+      farmer = await prisma.farmerInfo.findFirst({
+        where: { Farmerid: Adharnum }
       });
     }
 
-    // Get farmer with matching aadhaar
-    const farmer = await prisma.farmerInfo.findFirst({
-      where: {
-        adhars: {
-          some: {
-            AdhaarNumber: Adharnum
-          }
-        }
-      }
-    });
-
     if (!farmer) {
-      return res.json({
-        status: "error",
-        error: "Farmer with this aadhaar not found"
-      });
+      return res.json([]);
     }
 
     // Get farms for this farmer
@@ -81,18 +77,12 @@ module.exports.farminfo = async function (req, res) {
       }
     });
 
-    return res.json({
-      status: "ok",
-      count: farms.length,
-      farms
-    });
+    // Return plain array (frontend expects array directly)
+    return res.json(farms);
 
   } catch (err) {
-    console.log(err);
-    return res.json({
-      status: "error",
-      error: "Something went wrong"
-    });
+    console.log('farminfo error:', err);
+    return res.json([]);
   }
 };
 

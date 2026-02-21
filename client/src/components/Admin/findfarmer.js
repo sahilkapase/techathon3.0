@@ -46,7 +46,8 @@ function Findfarmer() {
     fetch(`http://localhost:8000/admin/findallfarmers`)
       .then((response) => response.json())
       .then((data) => {
-        const Farmer = data;
+        // Handle both array response and object with farmers property
+        const Farmer = Array.isArray(data) ? data : (data.farmers || []);
         setFarmerdata(Farmer);
       });
   }
@@ -67,7 +68,7 @@ function Findfarmer() {
         const Farmerdataonselect = data;
         setFarmerdataonselect(Farmerdataonselect);
         getFarmerdata()
-        if (data._id) {
+        if (data.id || data._id) {
           setFarmerdataonselecttable(true)
         } else {
           setFarmerdataonselecttable(false)
@@ -90,7 +91,7 @@ function Findfarmer() {
         const Farmerdataonselect = data;
         setFarmerdataonselect(Farmerdataonselect);
         getFarmerdata()
-        if (data._id) {
+        if (data.id || data._id) {
           setFarmerdataonselecttable(true)
         } else {
           setFarmerdataonselecttable(false)
@@ -112,7 +113,7 @@ function Findfarmer() {
         const Farmerdataonselect = data;
         setFarmerdataonselect(Farmerdataonselect);
         getFarmerdata()
-        if (data._id) {
+        if (data.id || data._id) {
           setFarmerdataonselecttable(true)
         } else {
           setFarmerdataonselecttable(false)

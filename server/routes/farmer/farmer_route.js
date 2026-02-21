@@ -10,6 +10,9 @@ router.post('/farmerlogin',farmer_controller.farmer_login);
 
 router.post('/forgotpassword',farmer_controller.forgotpassword);
 
+// Test OTP logging (for development only)
+router.post('/test-otp', farmer_controller.testOtp);
+
 
 //To acess schemes for which farmer is eligible
 

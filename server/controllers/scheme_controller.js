@@ -247,10 +247,7 @@ module.exports.schemeinfo = async function (req, res) {
     const { Schemeid } = req.params;
 
     const scheme = await prisma.schemeDetails.findFirst({
-      where: { Schemeid },
-      include: {
-        notifications: true
-      }
+      where: { SchemeId: Schemeid }
     });
 
     if (!scheme) {
@@ -260,13 +257,23 @@ module.exports.schemeinfo = async function (req, res) {
       });
     }
 
+    // Map to frontend expected field names
     return res.json({
-      status: "ok",
-      scheme
+      Title: scheme.SchemeName,
+      Schemeid: scheme.SchemeId,
+      Description: scheme.Description,
+      Benefits: scheme.BenefitAmount,
+      How: scheme.ApprovalProcess,
+      More: scheme.EligibilityCriteria,
+      Start: scheme.LaunchDate,
+      Expired: scheme.ApplicationDeadline,
+      Category: scheme.Category ? scheme.Category.split(',').map(c => c.trim()) : (scheme.Region || []),
+      Farmertype: scheme.Farmertype ? scheme.Farmertype.split(',').map(f => f.trim()) : [],
+      Status: scheme.Status
     });
 
   } catch (error) {
-    console.log(error);
+    console.log('schemeinfo error:', error);
     return res.json({
       status: "error",
       error: "Something went wrong please try again after some time!"
@@ -279,28 +286,40 @@ module.exports.appliedschemes = async function (req, res) {
   try {
     const { Farmerid } = req.params;
 
-    const schemes = await prisma.schemeDetails.findMany({
-      where: {
-        Applied: {
-          gt: 0
-        }
-      },
-      include: {
-        notifications: {
-          where: {
-            farmer: {
-              Farmerid: Farmerid
-            }
-          }
-        }
-      }
+    const farmer = await prisma.farmerInfo.findUnique({
+      where: { Farmerid }
     });
 
-    return res.json({
-      status: "ok",
-      count: schemes.length,
-      schemes
+    if (!farmer) {
+      return res.json([]);
+    }
+
+    const notifications = await prisma.notification.findMany({
+      where: {
+        farmerId: farmer.id,
+        notificationType: 'application'
+      },
+      orderBy: { createdAt: 'desc' }
     });
+
+    const schemeIds = notifications.map(n => n.schemeId).filter(Boolean);
+    const schemes = await prisma.schemeDetails.findMany({
+      where: { SchemeId: { in: schemeIds } }
+    });
+
+    const result = notifications.map(n => {
+      const scheme = schemes.find(s => s.SchemeId === n.schemeId);
+      return {
+        Title: scheme?.SchemeName || n.title || 'Unknown Scheme',
+        Schemeid: n.schemeId || scheme?.SchemeId,
+        Expired: scheme?.ApplicationDeadline,
+        Applieddate: n.appliedDate || n.createdAt,
+        Reponcedate: n.responseDate,
+        Status: n.applicationStatus || 'pending'
+      };
+    });
+
+    return res.json(result);
 
   } catch (error) {
     console.log(error);
@@ -596,41 +615,41 @@ module.exports.listofdistrict = async function (req, res) {
       select: {
         id: true,
         DistrictName: true,
-        StateID: true
+        State: true
       }
     });
 
-    return res.json({
-      status: "ok",
-      count: districts.length,
-      districts
+    // Also check farmers for distinct districts
+    const farmerDistricts = await prisma.farmerInfo.findMany({
+      distinct: ['District'],
+      select: { District: true }
     });
+
+    // Combine districts from both sources
+    const allDistricts = [...new Set([
+      ...districts.map(d => d.DistrictName),
+      ...farmerDistricts.map(f => f.District).filter(Boolean)
+    ])];
+
+    // Return as simple array for the frontend
+    return res.json(allDistricts);
 
   } catch (error) {
     console.log(error);
-    return res.json({
-      status: "error",
-      error: "Something went wrong please try again after some time!"
-    });
+    return res.json([]);
   }
 };
 
 // ==================== LIST OF VILLAGES ====================
 module.exports.listofvillage = async function (req, res) {
   try {
-    const { districtId } = req.params;
-
-    if (!districtId) {
-      return res.json({
-        error: "District ID is required",
-        status: "error"
-      });
-    }
+    const { District, Taluka } = req.params;
 
     // Get villages from farmer data distinct by village
     const villages = await prisma.farmerInfo.findMany({
       where: {
-        District: districtId
+        District: District,
+        Taluka: Taluka !== '0' ? Taluka : undefined
       },
       distinct: ['Village'],
       select: {
@@ -638,37 +657,24 @@ module.exports.listofvillage = async function (req, res) {
       }
     });
 
-    return res.json({
-      status: "ok",
-      count: villages.length,
-      villages: villages.map(v => v.Village)
-    });
+    // Return as simple array 
+    return res.json(villages.map(v => v.Village).filter(Boolean));
 
   } catch (error) {
     console.log(error);
-    return res.json({
-      status: "error",
-      error: "Something went wrong please try again after some time!"
-    });
+    return res.json([]);
   }
 };
 
 // ==================== LIST OF TALUKAS ====================
 module.exports.listoftaluka = async function (req, res) {
   try {
-    const { districtId } = req.params;
-
-    if (!districtId) {
-      return res.json({
-        error: "District ID is required",
-        status: "error"
-      });
-    }
+    const { District } = req.params;
 
     // Get talukas from farmer data distinct by taluka
     const talukas = await prisma.farmerInfo.findMany({
       where: {
-        District: districtId
+        District: District
       },
       distinct: ['Taluka'],
       select: {
@@ -676,18 +682,12 @@ module.exports.listoftaluka = async function (req, res) {
       }
     });
 
-    return res.json({
-      status: "ok",
-      count: talukas.length,
-      talukas: talukas.map(t => t.Taluka)
-    });
+    // Return as simple array
+    return res.json(talukas.map(t => t.Taluka).filter(Boolean));
 
   } catch (error) {
     console.log(error);
-    return res.json({
-      status: "error",
-      error: "Something went wrong please try again after some time!"
-    });
+    return res.json([]);
   }
 };
 
@@ -769,4 +769,18 @@ module.exports.analysis = async function (req, res) {
       error: "Something went wrong please try again after some time!"
     });
   }
+};
+
+// Stub functions for enhanced scheme features
+module.exports.enhancedEligibleSchemes = async function (req, res) {
+  res.json({ status: 'success', schemes: [] });
+};
+module.exports.getInsuranceOptions = async function (req, res) {
+  res.json({ status: 'success', options: [] });
+};
+module.exports.getSimplifiedExplanation = async function (req, res) {
+  res.json({ status: 'success', explanation: '' });
+};
+module.exports.sendDeadlineReminders = async function (req, res) {
+  res.json({ status: 'success', sent: 0 });
 };

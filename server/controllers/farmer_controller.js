@@ -16,7 +16,7 @@ module.exports.farmer_signup = async function (req, res) {
   try {
     // Check if farmer already exists
     const olduser = await prisma.farmerInfo.findUnique({
-      where: { Mobilenum: req.body.Mobilenum }
+      where: { Mobilenum: BigInt(req.body.Mobilenum) }
     });
 
     if (olduser) {
@@ -54,7 +54,7 @@ module.exports.farmer_signup = async function (req, res) {
       data: {
         Farmerid: generatedId,
         Name: req.body.Name,
-        Mobilenum: req.body.Mobilenum,
+        Mobilenum: BigInt(req.body.Mobilenum),
         Email: req.body.Email || null,
         Gender: req.body.Gender || "Female",
         Category: req.body.Category || null,
@@ -94,6 +94,29 @@ module.exports.farmer_signup = async function (req, res) {
   }
 };
 
+// ==================== TEST OTP (Development Only) ====================
+module.exports.testOtp = async function (req, res) {
+  const { mobile, otp } = req.body;
+  
+  console.log('\n');
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║                                                            ║');
+  console.log('║           🔐  OTP VERIFICATION CODE  🔐                    ║');
+  console.log('║                                                            ║');
+  console.log('╠════════════════════════════════════════════════════════════╣');
+  console.log('║                                                            ║');
+  console.log(`║   📱  Mobile:  +91 ${mobile}                          ║`);
+  console.log('║                                                            ║');
+  console.log(`║   🔢  OTP:     ${otp}                                   ║`);
+  console.log('║                                                            ║');
+  console.log('╠════════════════════════════════════════════════════════════╣');
+  console.log('║         Enter this OTP in the application                  ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log('\n');
+  
+  return res.json({ status: "ok", message: "OTP logged to terminal" });
+};
+
 // ==================== FARMER LOGIN ====================
 module.exports.farmer_login = async function (req, res) {
   try {
@@ -108,7 +131,7 @@ module.exports.farmer_login = async function (req, res) {
     // Login by Mobile Number
     else if (req.body.Mobilenum && req.body.Password) {
       farmer = await prisma.farmerInfo.findUnique({
-        where: { Mobilenum: req.body.Mobilenum }
+        where: { Mobilenum: BigInt(req.body.Mobilenum) }
       });
     }
     else {
@@ -156,7 +179,7 @@ module.exports.forgotpassword = async function (req, res) {
     }
 
     const farmer = await prisma.farmerInfo.findUnique({
-      where: { Mobilenum: req.body.Mobilenum }
+      where: { Mobilenum: BigInt(req.body.Mobilenum) }
     });
 
     if (!farmer) {
@@ -168,7 +191,7 @@ module.exports.forgotpassword = async function (req, res) {
 
     // Update password
     await prisma.farmerInfo.update({
-      where: { Mobilenum: req.body.Mobilenum },
+      where: { Mobilenum: BigInt(req.body.Mobilenum) },
       data: { Password: req.body.Password }
     });
 
@@ -267,36 +290,47 @@ module.exports.adhar = async function (req, res) {
 // ==================== SCHEME APPLICATION ====================
 module.exports.applicationofscheme = async function (req, res) {
   try {
-    // Get all schemes farmer has applied for (via Notifications or scheme records)
     const farmer = await prisma.farmerInfo.findUnique({
       where: { Farmerid: req.params.Farmerid }
     });
 
     if (!farmer) {
-      return res.json({
-        status: "error",
-        error: "Farmer not found"
-      });
+      return res.json([]);
     }
 
-    // Get all schemes (can enhance with actual application tracking)
-    const schemes = await prisma.schemeDetails.findMany({
-      select: {
-        id: true,
-        SchemeId: true,
-        SchemeName: true,
-        Status: true
-      }
+    // Get schemes the farmer actually applied for (via Notification with notificationType=application)
+    const notifications = await prisma.notification.findMany({
+      where: {
+        farmerId: farmer.id,
+        notificationType: 'application'
+      },
+      orderBy: { createdAt: 'desc' }
     });
 
-    return res.json(schemes);
+    // Get scheme details for each application
+    const schemeIds = notifications.map(n => n.schemeId).filter(Boolean);
+    const schemes = await prisma.schemeDetails.findMany({
+      where: { SchemeId: { in: schemeIds } }
+    });
+
+    // Map to frontend expected format
+    const result = notifications.map(n => {
+      const scheme = schemes.find(s => s.SchemeId === n.schemeId);
+      return {
+        Title: scheme?.SchemeName || n.title || 'Unknown Scheme',
+        Schemeid: n.schemeId || scheme?.SchemeId,
+        Expired: scheme?.ApplicationDeadline,
+        Applieddate: n.appliedDate || n.createdAt,
+        Reponcedate: n.responseDate,
+        Status: n.applicationStatus || 'pending'
+      };
+    });
+
+    return res.json(result);
 
   } catch (err) {
-    console.log(err);
-    return res.json({
-      status: "error",
-      error: "Unable to find schemes"
-    });
+    console.log('applicationofscheme error:', err);
+    return res.json([]);
   }
 };
 
@@ -308,27 +342,45 @@ module.exports.eligibleschemes = async function (req, res) {
     // Find active eligible schemes
     const schemes = await prisma.schemeDetails.findMany({
       where: {
-        Status: "Active",
-        ApplicationDeadline: {
-          gte: new Date()
-        }
-      },
-      select: {
-        id: true,
-        SchemeId: true,
-        SchemeName: true,
-        Status: true
+        Status: "Active"
       }
     });
 
-    return res.json(schemes);
+    // Filter by Category and Farmertype if provided
+    let filtered = schemes;
+    if (Category && Category !== 'all' && Category !== 'null' && Category !== 'undefined') {
+      filtered = filtered.filter(s => {
+        const cat = s.Category || (s.Region ? s.Region.join(',') : '');
+        return cat.toLowerCase().includes(Category.toLowerCase());
+      });
+    }
+    if (Farmertype && Farmertype !== 'all' && Farmertype !== 'null' && Farmertype !== 'undefined') {
+      filtered = filtered.filter(s => {
+        const ft = s.Farmertype || s.EligibilityCriteria || '';
+        return ft.toLowerCase().includes(Farmertype.toLowerCase());
+      });
+    }
+
+    // Map to frontend expected field names
+    const result = filtered.map(s => ({
+      Title: s.SchemeName,
+      Schemeid: s.SchemeId,
+      Expired: s.ApplicationDeadline,
+      Start: s.LaunchDate,
+      Description: s.Description,
+      Benefits: s.BenefitAmount,
+      How: s.ApprovalProcess,
+      More: s.EligibilityCriteria,
+      Category: s.Category ? s.Category.split(',').map(c => c.trim()) : (s.Region || []),
+      Farmertype: s.Farmertype ? s.Farmertype.split(',').map(f => f.trim()) : [],
+      Status: s.Status
+    }));
+
+    return res.json(result);
 
   } catch (err) {
-    console.log(err);
-    return res.json({
-      status: "error",
-      error: "Unable to find schemes"
-    });
+    console.log('eligibleschemes error:', err);
+    return res.json([]);
   }
 };
 
@@ -368,7 +420,10 @@ module.exports.applyforscheme = async function (req, res) {
         title: `Applied for ${scheme.SchemeName}`,
         message: `Your application has been submitted for ${scheme.SchemeName}`,
         notificationType: "application",
-        status: "unread"
+        status: "unread",
+        schemeId: Schemeid,
+        applicationStatus: "pending",
+        appliedDate: new Date()
       }
     });
 
@@ -394,30 +449,41 @@ module.exports.approvedschemes = async function (req, res) {
     });
 
     if (!farmer) {
-      return res.json({
-        status: "error",
-        error: "Farmer not found"
-      });
+      return res.json([]);
     }
 
-    // Get approved schemes
-    const schemes = await prisma.schemeDetails.findMany({
-      select: {
-        id: true,
-        SchemeId: true,
-        SchemeName: true,
-        Status: true
-      }
+    // Get approved applications from Notification
+    const notifications = await prisma.notification.findMany({
+      where: {
+        farmerId: farmer.id,
+        notificationType: 'application',
+        applicationStatus: 'approved'
+      },
+      orderBy: { createdAt: 'desc' }
     });
 
-    return res.json(schemes);
+    const schemeIds = notifications.map(n => n.schemeId).filter(Boolean);
+    const schemes = await prisma.schemeDetails.findMany({
+      where: { SchemeId: { in: schemeIds } }
+    });
+
+    const result = notifications.map(n => {
+      const scheme = schemes.find(s => s.SchemeId === n.schemeId);
+      return {
+        Title: scheme?.SchemeName || n.title || 'Unknown Scheme',
+        Schemeid: n.schemeId || scheme?.SchemeId,
+        Expired: scheme?.ApplicationDeadline,
+        Applieddate: n.appliedDate || n.createdAt,
+        Reponcedate: n.responseDate,
+        Status: 'approved'
+      };
+    });
+
+    return res.json(result);
 
   } catch (err) {
-    console.log(err);
-    return res.json({
-      status: "error",
-      error: "Unable to find schemes"
-    });
+    console.log('approvedschemes error:', err);
+    return res.json([]);
   }
 };
 
@@ -429,30 +495,41 @@ module.exports.rejectedschemes = async function (req, res) {
     });
 
     if (!farmer) {
-      return res.json({
-        status: "error",
-        error: "Farmer not found"
-      });
+      return res.json([]);
     }
 
-    // Get rejected/rejected schemes
-    const schemes = await prisma.schemeDetails.findMany({
-      select: {
-        id: true,
-        SchemeId: true,
-        SchemeName: true,
-        Status: true
-      }
+    // Get rejected applications from Notification
+    const notifications = await prisma.notification.findMany({
+      where: {
+        farmerId: farmer.id,
+        notificationType: 'application',
+        applicationStatus: 'rejected'
+      },
+      orderBy: { createdAt: 'desc' }
     });
 
-    return res.json(schemes);
+    const schemeIds = notifications.map(n => n.schemeId).filter(Boolean);
+    const schemes = await prisma.schemeDetails.findMany({
+      where: { SchemeId: { in: schemeIds } }
+    });
+
+    const result = notifications.map(n => {
+      const scheme = schemes.find(s => s.SchemeId === n.schemeId);
+      return {
+        Title: scheme?.SchemeName || n.title || 'Unknown Scheme',
+        Schemeid: n.schemeId || scheme?.SchemeId,
+        Expired: scheme?.ApplicationDeadline,
+        Applieddate: n.appliedDate || n.createdAt,
+        Reponcedate: n.responseDate,
+        Status: 'rejected'
+      };
+    });
+
+    return res.json(result);
 
   } catch (err) {
-    console.log(err);
-    return res.json({
-      status: "error",
-      error: "Unable to find schemes"
-    });
+    console.log('rejectedschemes error:', err);
+    return res.json([]);
   }
 };
 

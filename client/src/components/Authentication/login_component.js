@@ -193,6 +193,9 @@ export default class Login extends Component {
 
                 <div className="form-footer">
                   <p className="footer-text">
+                    <a href="/Forgotpin" className="footer-link forgot-link">Forgot Password?</a>
+                  </p>
+                  <p className="footer-text">
                     Don't have an account? 
                     <a href="/sign-up" className="footer-link"> Sign Up</a>
                   </p>
